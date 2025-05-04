@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ControlBarProps {
   onClose: () => void;
@@ -19,6 +19,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
 }) => {
   const [showHelp, setShowHelp] = useState(false);
   const [showCameras, setShowCameras] = useState(false);
+  const controlBarRef = useRef<HTMLDivElement>(null);
 
   const toggleHelp = () => {
     setShowHelp(prev => !prev);
@@ -29,9 +30,32 @@ const ControlBar: React.FC<ControlBarProps> = ({
     setShowCameras(prev => !prev);
     if (showHelp) setShowHelp(false);
   };
+  
+  // Handle outside clicks to close menus
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      // Check if the click was outside the control bar
+      if (controlBarRef.current && !controlBarRef.current.contains(event.target as Node)) {
+        setShowHelp(false);
+        setShowCameras(false);
+      }
+    };
+    
+    // Add event listener when menus are open
+    if (showHelp || showCameras) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('touchstart', handleOutsideClick as EventListener);
+    }
+    
+    // Cleanup function
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick as EventListener);
+    };
+  }, [showHelp, showCameras]);
 
   return (
-    <div className="control-bar">
+    <div className="control-bar" ref={controlBarRef}>
       <button 
         className={`control-button ${adjustmentsVisible ? 'active' : ''}`} 
         onClick={onToggleAdjustments} 

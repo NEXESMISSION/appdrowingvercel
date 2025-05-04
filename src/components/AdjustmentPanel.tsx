@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { OverlaySettings, CameraDevice } from '../types';
 
 interface AdjustmentPanelProps {
@@ -22,11 +22,43 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
 }) => {
   // Local state for slider values to make them smoother
   const [localSettings, setLocalSettings] = useState(settings);
+  const panelRef = useRef<HTMLDivElement>(null);
   
   // Update local settings when props change
   useEffect(() => {
     setLocalSettings(settings);
   }, [settings]);
+  
+  // Handle outside clicks to close the panel
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      // Only process if panel is visible
+      if (!visible) return;
+      
+      // Check if the click was outside the panel
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    
+    // Add event listener when panel is visible
+    if (visible) {
+      // Use a small delay to prevent immediate closing when opening the panel
+      const timer = setTimeout(() => {
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('touchstart', handleOutsideClick as EventListener);
+      }, 100);
+      
+      // Cleanup function
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener('mousedown', handleOutsideClick);
+        document.removeEventListener('touchstart', handleOutsideClick as EventListener);
+      };
+    }
+    
+    return undefined;
+  }, [visible, onClose]);
   
   // Handle slider change with debounce
   const handleSliderChange = (key: keyof OverlaySettings, value: number) => {
@@ -53,7 +85,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
   };
 
   return (
-    <div className={`adjustment-panel ${visible ? 'visible' : ''}`}>
+    <div className={`adjustment-panel ${visible ? 'visible' : ''}`} ref={panelRef}>
       <div className="panel-header">
         <button className="close-panel-button" onClick={onClose} aria-label="Close panel">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -68,8 +100,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         <div className="opacity-slider">
           <div className="slider-mini">
             <label title="Opacity">
-              <span className="slider-icon">⚪</span>
-              <span className="slider-value">Opacity</span>
+              <span className="slider-icon">👁️</span>
+              <span className="slider-label">Opacity</span>
             </label>
             <input
               type="range"
@@ -88,8 +120,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           {/* Row 1, Column 1: Scale */}
           <div className="slider-mini">
             <label title="Scale">
-              <span className="slider-icon">⤢</span>
-              <span className="slider-value">{Math.round(localSettings.scale * 100)}%</span>
+              <span className="slider-icon">🔍</span>
+              <span className="slider-label">Scale</span>
             </label>
             <input
               type="range"
@@ -105,8 +137,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           {/* Row 1, Column 2: Position X */}
           <div className="slider-mini">
             <label title="Position X">
-              <span className="slider-icon">↔</span>
-              <span className="slider-value">{Math.round(localSettings.positionX)}</span>
+              <span className="slider-icon">↔️</span>
+              <span className="slider-label">Move X</span>
             </label>
             <input
               type="range"
@@ -121,8 +153,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           {/* Row 1, Column 3: Position Y */}
           <div className="slider-mini">
             <label title="Position Y">
-              <span className="slider-icon">↕</span>
-              <span className="slider-value">{Math.round(localSettings.positionY)}</span>
+              <span className="slider-icon">↕️</span>
+              <span className="slider-label">Move Y</span>
             </label>
             <input
               type="range"
@@ -137,8 +169,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           {/* Row 2, Column 1: Rotation */}
           <div className="slider-mini">
             <label title="Rotation">
-              <span className="slider-icon">⟳</span>
-              <span className="slider-value">{Math.round(localSettings.rotation)}°</span>
+              <span className="slider-icon">🔄</span>
+              <span className="slider-label">Rotate</span>
             </label>
             <input
               type="range"
@@ -153,8 +185,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           {/* Row 2, Column 2: Tilt X */}
           <div className="slider-mini">
             <label title="Tilt X">
-              <span className="slider-icon">⟲</span>
-              <span className="slider-value">{Math.round(localSettings.tiltX)}°</span>
+              <span className="slider-icon">↩️</span>
+              <span className="slider-label">Tilt X</span>
             </label>
             <input
               type="range"
@@ -169,8 +201,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           {/* Row 2, Column 3: Tilt Y */}
           <div className="slider-mini">
             <label title="Tilt Y">
-              <span className="slider-icon">⟳</span>
-              <span className="slider-value">{Math.round(localSettings.tiltY)}°</span>
+              <span className="slider-icon">↪️</span>
+              <span className="slider-label">Tilt Y</span>
             </label>
             <input
               type="range"
@@ -186,7 +218,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         {/* Reset button */}
         <div className="reset-mini">
           <button className="reset-button-mini" onClick={handleReset} title="Reset All Settings">
-            ↺ Reset
+            🔄 Reset
           </button>
         </div>
       </div>
@@ -200,8 +232,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             onDeviceChange(devices[nextIndex].deviceId);
           }} aria-label="Flip camera" title="Switch Camera">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M23 4v6h-6M1 20v-6h6" />
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="currentColor" strokeWidth="2"/>
             </svg>
             <span className="camera-name">{devices.find(d => d.deviceId === currentDeviceId)?.label || `Camera ${devices.findIndex(d => d.deviceId === currentDeviceId) + 1}`}</span>
           </button>
