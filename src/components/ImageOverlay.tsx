@@ -1,0 +1,40 @@
+import React from 'react';
+import { OverlaySettings } from '../types';
+
+interface ImageOverlayProps {
+  imageUrl: string;
+  settings: OverlaySettings;
+}
+
+const ImageOverlay: React.FC<ImageOverlayProps> = ({ imageUrl, settings }) => {
+  const { opacity, scale, positionX, positionY, rotation, tiltX, tiltY } = settings;
+
+  const overlayStyle: React.CSSProperties = {
+    opacity,
+    transform: `translate(calc(-50% + ${positionX}px), calc(-50% + ${positionY}px)) 
+                scale(${scale}) 
+                rotate(${rotation}deg) 
+                perspective(1000px) 
+                rotateX(${tiltX}deg) 
+                rotateY(${tiltY}deg)`,
+    cursor: 'move',
+    touchAction: 'none', // Prevents browser handling of touch events
+  };
+
+  return (
+    <div className="overlay-container">
+      <img
+        src={imageUrl}
+        alt="Overlay"
+        className="image-overlay"
+        style={overlayStyle}
+        draggable="false" // Prevents default drag behavior
+      />
+      <div className="overlay-hint">
+        <span>Drag to move • Pinch to zoom • Rotate with two fingers</span>
+      </div>
+    </div>
+  );
+};
+
+export default ImageOverlay;
