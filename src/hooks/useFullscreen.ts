@@ -8,13 +8,13 @@ const useFullscreen = (elementRef: React.RefObject<HTMLElement>) => {
       if (elementRef.current?.requestFullscreen) {
         elementRef.current.requestFullscreen()
           .then(() => setIsFullscreen(true))
-          .catch(err => console.error('Error attempting to enable fullscreen:', err));
+          .catch(() => { /* Handle fullscreen error silently */ });
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen()
           .then(() => setIsFullscreen(false))
-          .catch(err => console.error('Error attempting to exit fullscreen:', err));
+          .catch(() => { /* Handle exit fullscreen error silently */ });
       }
     }
   }, [elementRef]);

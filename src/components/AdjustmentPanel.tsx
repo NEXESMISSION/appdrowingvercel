@@ -55,19 +55,6 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
   return (
     <div className={`adjustment-panel ${visible ? 'visible' : ''}`}>
       <div className="panel-header">
-        {devices.length > 1 && (
-          <button className="flip-camera-button" onClick={() => {
-            // Find the next camera in the list
-            const currentIndex = devices.findIndex(d => d.deviceId === currentDeviceId);
-            const nextIndex = (currentIndex + 1) % devices.length;
-            onDeviceChange(devices[nextIndex].deviceId);
-          }} aria-label="Flip camera">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M23 4v6h-6M1 20v-6h6" />
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-            </svg>
-          </button>
-        )}
         <button className="close-panel-button" onClick={onClose} aria-label="Close panel">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -76,49 +63,50 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         </button>
       </div>
       
-      <h3 className="panel-title">Image Adjustments</h3>
-      
-      <div className="compact-sliders">
-        {/* Opacity slider */}
-        <div className="slider-container">
-          <label>
-            Opacity
-            <span>{Math.round(localSettings.opacity * 100)}%</span>
-          </label>
-          <input
-            type="range"
-            className="slider"
-            min="0"
-            max="1"
-            step="0.01"
-            value={localSettings.opacity}
-            onChange={(e) => handleSliderChange('opacity', parseFloat(e.target.value))}
-          />
+      <div className="ultra-compact-sliders">
+        {/* Opacity at the top */}
+        <div className="opacity-slider">
+          <div className="slider-mini">
+            <label title="Opacity">
+              <span className="slider-icon">⚪</span>
+              <span className="slider-value">Opacity</span>
+            </label>
+            <input
+              type="range"
+              className="slider"
+              min="0"
+              max="1"
+              step="0.01"
+              value={localSettings.opacity}
+              onChange={(e) => handleSliderChange('opacity', parseFloat(e.target.value))}
+            />
+          </div>
         </div>
         
-        {/* Scale slider */}
-        <div className="slider-container">
-          <label>
-            Scale
-            <span>{Math.round(localSettings.scale * 100)}%</span>
-          </label>
-          <input
-            type="range"
-            className="slider"
-            min="0.1"
-            max="3"
-            step="0.01"
-            value={localSettings.scale}
-            onChange={(e) => handleSliderChange('scale', parseFloat(e.target.value))}
-          />
-        </div>
-        
-        {/* Position sliders in a row */}
-        <div className="slider-row">
-          <div className="slider-container half-width">
-            <label>
-              Position X
-              <span>{Math.round(localSettings.positionX)}</span>
+        {/* 3x2 Grid for other controls */}
+        <div className="slider-grid">
+          {/* Row 1, Column 1: Scale */}
+          <div className="slider-mini">
+            <label title="Scale">
+              <span className="slider-icon">⤢</span>
+              <span className="slider-value">{Math.round(localSettings.scale * 100)}%</span>
+            </label>
+            <input
+              type="range"
+              className="slider"
+              min="0.1"
+              max="3"
+              step="0.01"
+              value={localSettings.scale}
+              onChange={(e) => handleSliderChange('scale', parseFloat(e.target.value))}
+            />
+          </div>
+          
+          {/* Row 1, Column 2: Position X */}
+          <div className="slider-mini">
+            <label title="Position X">
+              <span className="slider-icon">↔</span>
+              <span className="slider-value">{Math.round(localSettings.positionX)}</span>
             </label>
             <input
               type="range"
@@ -130,10 +118,11 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             />
           </div>
           
-          <div className="slider-container half-width">
-            <label>
-              Position Y
-              <span>{Math.round(localSettings.positionY)}</span>
+          {/* Row 1, Column 3: Position Y */}
+          <div className="slider-mini">
+            <label title="Position Y">
+              <span className="slider-icon">↕</span>
+              <span className="slider-value">{Math.round(localSettings.positionY)}</span>
             </label>
             <input
               type="range"
@@ -144,35 +133,28 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
               onChange={(e) => handleSliderChange('positionY', parseInt(e.target.value))}
             />
           </div>
-        </div>
-        
-        {/* Rotation slider */}
-        <div className="slider-container">
-          <label>
-            Rotation
-            <span>{Math.round(localSettings.rotation)}°</span>
-          </label>
-          <input
-            type="range"
-            className="slider"
-            min="-180"
-            max="180"
-            value={localSettings.rotation}
-            onChange={(e) => handleSliderChange('rotation', parseInt(e.target.value))}
-          />
-        </div>
-        
-        {/* Tilt controls section */}
-        <div className="section-divider">
-          <span>3D Perspective</span>
-        </div>
-        
-        {/* Tilt sliders in a row */}
-        <div className="slider-row">
-          <div className="slider-container half-width">
-            <label>
-              Tilt X
-              <span>{Math.round(localSettings.tiltX)}°</span>
+
+          {/* Row 2, Column 1: Rotation */}
+          <div className="slider-mini">
+            <label title="Rotation">
+              <span className="slider-icon">⟳</span>
+              <span className="slider-value">{Math.round(localSettings.rotation)}°</span>
+            </label>
+            <input
+              type="range"
+              className="slider"
+              min="-180"
+              max="180"
+              value={localSettings.rotation}
+              onChange={(e) => handleSliderChange('rotation', parseInt(e.target.value))}
+            />
+          </div>
+
+          {/* Row 2, Column 2: Tilt X */}
+          <div className="slider-mini">
+            <label title="Tilt X">
+              <span className="slider-icon">⟲</span>
+              <span className="slider-value">{Math.round(localSettings.tiltX)}°</span>
             </label>
             <input
               type="range"
@@ -184,10 +166,11 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             />
           </div>
           
-          <div className="slider-container half-width">
-            <label>
-              Tilt Y
-              <span>{Math.round(localSettings.tiltY)}°</span>
+          {/* Row 2, Column 3: Tilt Y */}
+          <div className="slider-mini">
+            <label title="Tilt Y">
+              <span className="slider-icon">⟳</span>
+              <span className="slider-value">{Math.round(localSettings.tiltY)}°</span>
             </label>
             <input
               type="range"
@@ -199,33 +182,30 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             />
           </div>
         </div>
+        
+        {/* Reset button */}
+        <div className="reset-mini">
+          <button className="reset-button-mini" onClick={handleReset} title="Reset All Settings">
+            ↺ Reset
+          </button>
+        </div>
       </div>
       
       <div className="panel-footer">
-        <button className="reset-button" onClick={handleReset}>
-          Reset All
-        </button>
-        
         {devices.length > 1 && (
-          <div className="camera-select-container">
-            <label>Camera:</label>
-            <select
-              className="camera-select"
-              value={currentDeviceId}
-              onChange={(e) => onDeviceChange(e.target.value)}
-            >
-              {devices.map((device) => (
-                <option key={device.deviceId} value={device.deviceId}>
-                  {device.label || `Camera ${devices.indexOf(device) + 1}`}
-                </option>
-              ))}
-            </select>
-          </div>
+          <button className="flip-camera-button" onClick={() => {
+            // Find the next camera in the list
+            const currentIndex = devices.findIndex(d => d.deviceId === currentDeviceId);
+            const nextIndex = (currentIndex + 1) % devices.length;
+            onDeviceChange(devices[nextIndex].deviceId);
+          }} aria-label="Flip camera" title="Switch Camera">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M23 4v6h-6M1 20v-6h6" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+            <span className="camera-name">{devices.find(d => d.deviceId === currentDeviceId)?.label || `Camera ${devices.findIndex(d => d.deviceId === currentDeviceId) + 1}`}</span>
+          </button>
         )}
-        
-        <div className="interaction-tip">
-          <small>Tip: Drag to move, pinch to zoom, rotate with two fingers</small>
-        </div>
       </div>
     </div>
   );

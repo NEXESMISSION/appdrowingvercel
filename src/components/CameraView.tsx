@@ -22,7 +22,7 @@ const CameraView: React.FC<CameraViewProps> = ({ stream }) => {
         setIsLoading(false);
         setHasError(false);
       } catch (err) {
-        console.error('Error attaching stream to video element:', err);
+        // Handle error attaching stream silently
         setHasError(true);
       }
     } else if (!stream) {
@@ -35,7 +35,7 @@ const CameraView: React.FC<CameraViewProps> = ({ stream }) => {
   };
   
   const handleError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    console.error('Video error:', e);
+    // Handle video error silently
     setHasError(true);
     setIsLoading(false);
   };

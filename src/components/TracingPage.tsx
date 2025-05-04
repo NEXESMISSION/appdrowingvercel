@@ -81,6 +81,10 @@ const TracingPage: React.FC = () => {
     navigate('/');
   };
 
+  const handleDeviceChange = (deviceId: string) => {
+    switchCamera(deviceId);
+  };
+
   const toggleAdjustments = () => {
     setAdjustmentsVisible(prev => !prev);
   };
@@ -90,7 +94,7 @@ const TracingPage: React.FC = () => {
   };
 
   return (
-    <div className={`tracing-page ${adjustmentsVisible ? 'with-panel' : ''}`} ref={containerRef}>
+    <div className="tracing-page" ref={containerRef}>
       <div className="camera-container">
         <CameraView stream={stream} />
         
@@ -107,6 +111,9 @@ const TracingPage: React.FC = () => {
           onClose={handleClose}
           onToggleAdjustments={toggleAdjustments}
           adjustmentsVisible={adjustmentsVisible}
+          devices={devices}
+          currentDeviceId={currentDeviceId}
+          onDeviceChange={handleDeviceChange}
         />
         
         <AdjustmentPanel

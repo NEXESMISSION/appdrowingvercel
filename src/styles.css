@@ -26,29 +26,64 @@ body {
   padding: 20px;
   text-align: center;
   overflow-y: auto;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
 .upload-page h1 {
-  margin-bottom: 20px;
-  font-weight: 300;
-  font-size: 2.5rem;
-  color: #333;
+  margin-bottom: 30px;
+  font-weight: 700;
+  font-size: 3rem;
+  color: #2d3748;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  position: relative;
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.upload-page h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #4285f4;
+  border-radius: 2px;
 }
 
 .instructions {
-  background-color: #f0f4f8;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
   max-width: 600px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   text-align: left;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .instructions h2 {
-  margin-bottom: 15px;
-  font-size: 1.3rem;
-  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #2d3748;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.instructions h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: #4285f4;
+  border-radius: 2px;
 }
 
 .instructions ol {
@@ -56,24 +91,53 @@ body {
 }
 
 .instructions li {
-  margin-bottom: 10px;
-  line-height: 1.5;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 5px;
+  color: #4a5568;
 }
 
 .upload-button {
   background-color: #4285f4;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 1rem;
+  border-radius: 30px;
+  padding: 15px 36px;
+  font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(66, 133, 244, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.upload-button:hover::after {
+  opacity: 1;
 }
 
 .upload-button:hover {
   background-color: #3367d6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+}
+
+.upload-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(66, 133, 244, 0.3);
 }
 
 .file-input {
@@ -82,56 +146,102 @@ body {
 
 /* Camera Permission Styles */
 .camera-permission {
-  background-color: #f0f4f8;
-  border-radius: 8px;
-  padding: 30px;
-  margin-bottom: 30px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 40px;
+  margin-bottom: 40px;
   max-width: 600px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .permission-icon {
   color: #4285f4;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  background-color: rgba(66, 133, 244, 0.1);
+  padding: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .camera-permission h2 {
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #2d3748;
+  font-weight: 600;
 }
 
 .camera-permission p {
-  margin-bottom: 25px;
-  line-height: 1.5;
-  color: #555;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  color: #4a5568;
+  max-width: 450px;
 }
 
 .permission-button {
   background-color: #4285f4;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 1rem;
+  border-radius: 30px;
+  padding: 15px 36px;
+  font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(66, 133, 244, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.permission-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.permission-button:hover::after {
+  opacity: 1;
 }
 
 .permission-button:hover {
   background-color: #3367d6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+}
+
+.permission-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(66, 133, 244, 0.3);
 }
 
 .loading-message {
-  padding: 20px;
+  padding: 30px;
   text-align: center;
-  color: #555;
-  font-size: 1.1rem;
+  color: #4a5568;
+  font-size: 1.2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0,0,0,0.05);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
 }
 
 /* Tracing Page Styles */
@@ -140,11 +250,11 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  transition: height 0.3s ease;
 }
 
+/* No longer need to extend page height */
 .tracing-page.with-panel {
-  height: calc(100vh + 150px); /* Extend the page height when panel is visible */
+  height: 100vh;
 }
 
 .camera-container {
@@ -264,24 +374,23 @@ body {
 
 /* Adjustment Panel Styles */
 .adjustment-panel {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.75); /* More transparent */
+  position: fixed; /* Changed from absolute to fixed */
+  background-color: rgba(255, 255, 255, 0.65); /* Even more transparent */
   backdrop-filter: blur(5px); /* Lighter frosted glass effect */
   -webkit-backdrop-filter: blur(5px); /* For Safari */
-  overflow-y: auto; /* Enable scrolling */
-  padding: 15px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: 100; /* Increased z-index */
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  z-index: 100;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  border-radius: 10px;
 }
 
 .adjustment-panel.visible {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -314,7 +423,7 @@ body {
   font-weight: 600;
 }
 
-.close-panel-button, .flip-camera-button {
+.close-panel-button {
   background: none;
   border: none;
   color: #555;
@@ -324,7 +433,6 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  margin-left: 8px;
 }
 
 .flip-camera-button:hover {
@@ -339,6 +447,105 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.ultra-compact-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 300px;
+}
+
+.opacity-slider {
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.slider-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(2, auto);
+  gap: 4px;
+  width: 100%;
+}
+
+.slider-mini {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 3px 4px;
+}
+
+.slider-mini label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+}
+
+.slider-icon {
+  font-size: 0.9rem;
+}
+
+.slider-value {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.reset-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+}
+
+.reset-button-mini {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.reset-button-mini:hover {
+  color: #4285f4;
+}
+
+.panel-footer {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.flip-camera-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s;
+}
+
+.flip-camera-button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.camera-name {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .slider-row {
@@ -526,29 +733,51 @@ body {
   color: white;
 }
 
-.help-tooltip {
+.help-tooltip, .camera-tooltip {
   position: absolute;
-  top: 60px;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 8px;
+  top: 50px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
   padding: 15px;
-  width: 280px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 20;
+  border-radius: 5px;
+  width: 250px;
+  z-index: 1000;
   font-size: 0.9rem;
 }
 
-.help-tooltip h4 {
+.help-tooltip h4, .camera-tooltip h4 {
   margin-top: 0;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   font-size: 1rem;
-  color: #333;
 }
 
-.help-tooltip ul {
-  margin: 0 0 15px 0;
+.help-tooltip ul, .camera-tooltip ul {
+  margin: 0 0 10px 0;
   padding-left: 20px;
+}
+
+.camera-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.camera-list li {
+  padding: 8px 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.camera-list li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.camera-list li.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
 }
 
 .help-tooltip li {
@@ -583,55 +812,67 @@ body {
   transform: translateY(-50%);
 }
 
+.credit-line {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #718096;
+  opacity: 0.8;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
 /* For mobile/portrait */
 @media (max-width: 768px) {
   .adjustment-panel {
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    border-radius: 15px 15px 0 0;
-    transform: translateY(100%);
-    max-height: 65vh; /* Reduced height to see more of the camera */
-    overflow-y: auto; /* Enable scrolling */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    padding-bottom: 30px; /* Extra padding at bottom for iOS */
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 95%;
+    border-radius: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   
   .adjustment-panel.visible {
-    transform: translateY(0);
+    transform: translateX(-50%);
+    opacity: 1;
+    visibility: visible;
   }
   
-  /* Add padding at the bottom to ensure all content is visible when scrolling */
+  /* No padding needed as we're showing everything at once */
   .compact-sliders {
-    padding-bottom: 30px;
+    padding-bottom: 0;
   }
   
-  /* Fix the panel header to stay at the top when scrolling */
+  /* Panel header doesn't need to be sticky anymore */
   .panel-header {
-    position: sticky;
-    top: 0;
+    position: relative;
     background-color: transparent;
-    z-index: 5;
     display: flex;
     justify-content: flex-end;
-    padding: 10px;
+    padding: 5px;
     margin: 0;
   }
   
   /* Make sliders easier to use on mobile */
   .slider::-webkit-slider-thumb {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
   }
   
   .slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
   }
   
   .slider {
-    height: 6px;
-    margin: 15px 0;
+    height: 4px;
+    margin: 5px 0;
   }
   
   .slider-container {
@@ -697,38 +938,70 @@ body {
 /* For tablet/desktop/wider screens */
 @media (min-width: 769px) {
   .adjustment-panel {
-    right: 20px; /* Position from right edge instead of transforming */
-    top: 70px; /* Position from top instead of center */
-    transform: translateX(100%);
-    max-width: 320px;
-    width: 320px;
-    border-radius: 12px;
-    max-height: calc(100vh - 140px); /* Leave space at top and bottom */
-    overflow-y: auto;
+    right: 20px;
+    top: 70px;
+    transform: translateX(0);
+    max-width: 300px;
+    width: auto;
+    border-radius: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   
   .adjustment-panel.visible {
     transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
   }
   
-  /* Make the panel more organized with sections */
-  .compact-sliders {
+  /* Single column layout for the panel */
+  .slider-grid {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     gap: 8px;
   }
   
-  /* Add some visual separation between slider groups */
-  .slider-row {
-    background-color: rgba(255, 255, 255, 0.3);
+  .slider-mini {
+    width: 100% !important;
+    margin-bottom: 8px;
+    background-color: rgba(255, 255, 255, 0.15);
     padding: 8px;
     border-radius: 8px;
+    transition: background-color 0.2s;
   }
   
-  .slider-container {
-    background-color: rgba(255, 255, 255, 0.3);
-    padding: 8px;
-    border-radius: 8px;
+  .slider-mini:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  .opacity-slider {
+    margin-bottom: 12px;
+  }
+  
+  /* Clean modern look for sliders */
+  .slider {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    outline: none;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    background: #4285f4;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #4285f4;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 }
 

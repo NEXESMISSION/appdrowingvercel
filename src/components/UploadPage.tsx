@@ -22,7 +22,7 @@ const UploadPage: React.FC = () => {
       stream.getTracks().forEach(track => track.stop());
       setCameraPermission('granted');
     } catch (error) {
-      console.error('Camera permission error:', error);
+      // Handle camera permission error silently
       setCameraPermission('denied');
     } finally {
       setIsCheckingPermission(false);
@@ -60,23 +60,23 @@ const UploadPage: React.FC = () => {
       
       {isCheckingPermission ? (
         <div className="loading-message">
-          <p>Checking camera access...</p>
+          <p>🔍 Checking camera access...</p>
         </div>
       ) : cameraPermission === 'granted' ? (
         <>
           <div className="instructions">
-            <h2>How to use TraceMate:</h2>
+            <h2>🚀 How to use TraceMate:</h2>
             <ol>
-              <li>Upload an image you want to trace or reference</li>
-              <li>Position the image over your camera feed</li>
-              <li>Use touch or mouse to move, rotate, and scale the image</li>
-              <li>Adjust opacity and other settings using the control panel</li>
-              <li>Create your artwork by tracing over the image</li>
+              <li>📤 Upload an image you want to trace or reference</li>
+              <li>🎯 Position the image over your camera feed</li>
+              <li>👆 Use touch or mouse to move, rotate, and scale the image</li>
+              <li>🎚️ Adjust opacity and other settings using the control panel</li>
+              <li>🎨 Create your artwork by tracing over the image</li>
             </ol>
           </div>
           
           <button className="upload-button" onClick={handleUploadClick}>
-            Upload Image
+            📷 Upload Image
           </button>
           <input
             type="file"
@@ -94,13 +94,14 @@ const UploadPage: React.FC = () => {
               <path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <h2>Camera Access Required</h2>
-          <p>TraceMate needs access to your camera to work properly. Please grant camera permission to continue.</p>
+          <h2>📷 Camera Access Required</h2>
+          <p>📱 TraceMate needs access to your camera to work properly. Please grant camera permission to continue.</p>
           <button className="permission-button" onClick={handleRequestPermission}>
-            Grant Camera Access
+            🔓 Grant Camera Access
           </button>
         </div>
       )}
+      <div className="credit-line">Made by Saif Elleuchi</div>
     </div>
   );
 };

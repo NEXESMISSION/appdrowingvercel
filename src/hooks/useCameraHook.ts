@@ -47,7 +47,7 @@ const useCameraHook = (initialDeviceId?: string) => {
         }
       } catch (err) {
         // Some browsers don't support permissions API, fall back to getUserMedia
-        console.log('Permissions API not supported, will check on camera access');
+        // Permissions API not supported, will check on camera access
       }
     };
     
@@ -74,7 +74,7 @@ const useCameraHook = (initialDeviceId?: string) => {
       return videoDevices;
     } catch (err) {
       setError('Failed to enumerate devices');
-      console.error('Error getting media devices:', err);
+      // Handle error getting media devices silently
       return [];
     }
   }, []);
@@ -84,7 +84,7 @@ const useCameraHook = (initialDeviceId?: string) => {
       // Stop all tracks in the current stream
       streamRef.current.getTracks().forEach(track => {
         track.stop();
-        console.log('Camera track stopped');
+        // Camera track stopped
       });
       setStream(null);
       streamRef.current = null;
@@ -102,7 +102,7 @@ const useCameraHook = (initialDeviceId?: string) => {
 
       setError(null); // Clear any previous errors
       
-      console.log('Starting camera with deviceId:', deviceId || 'default');
+      // Starting camera with deviceId
       
       const constraints: MediaStreamConstraints = {
         video: deviceId 
@@ -115,10 +115,10 @@ const useCameraHook = (initialDeviceId?: string) => {
         audio: false
       };
 
-      console.log('Using constraints:', JSON.stringify(constraints));
+      // Using constraints
       
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log('Camera stream obtained successfully');
+      // Camera stream obtained successfully
       
       // Check if we have video tracks
       if (mediaStream.getVideoTracks().length === 0) {
@@ -127,7 +127,7 @@ const useCameraHook = (initialDeviceId?: string) => {
       
       // Log video track info
       const videoTrack = mediaStream.getVideoTracks()[0];
-      console.log('Video track:', videoTrack.label, 'enabled:', videoTrack.enabled);
+      // Video track enabled
       
       setStream(mediaStream);
       streamRef.current = mediaStream;
@@ -146,7 +146,7 @@ const useCameraHook = (initialDeviceId?: string) => {
     } catch (err: any) {
       setPermissionGranted(false);
       setError(`Failed to access camera: ${err.message || 'Unknown error'}`);
-      console.error('Error accessing camera:', err);
+      // Handle error accessing camera silently
       return null;
     }
   }, [devices.length, getDevices, stopCamera]);
@@ -188,7 +188,7 @@ const useCameraHook = (initialDeviceId?: string) => {
   useEffect(() => {
     if (error && retryCount < 3 && isActive && permissionGranted !== false) {
       const timer = setTimeout(() => {
-        console.log(`Retrying camera initialization (attempt ${retryCount + 1})`);
+        // Retrying camera initialization
         setRetryCount(prev => prev + 1);
         startCamera(currentDeviceIdRef.current);
       }, 1000);
@@ -201,7 +201,7 @@ const useCameraHook = (initialDeviceId?: string) => {
   useEffect(() => {
     // Only start if permission was granted or not yet checked
     if (isActive && permissionGranted !== false) {
-      console.log('Initial camera setup with deviceId:', currentDeviceId || 'default');
+      // Initial camera setup
       startCamera(currentDeviceId);
     }
 
@@ -215,10 +215,10 @@ const useCameraHook = (initialDeviceId?: string) => {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        console.log('Page hidden, stopping camera');
+        // Page hidden, stopping camera
         stopCamera();
       } else if (isActiveRef.current && permissionGranted !== false) {
-        console.log('Page visible, resuming camera');
+        // Page visible, resuming camera
         startCamera(currentDeviceIdRef.current);
       }
     };

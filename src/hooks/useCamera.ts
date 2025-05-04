@@ -39,7 +39,7 @@ const useCamera = (initialDeviceId?: string) => {
       }
     } catch (err) {
       setError('Failed to enumerate devices');
-      console.error('Error getting media devices:', err);
+      // Handle error getting media devices silently
     }
   };
 
@@ -54,7 +54,7 @@ const useCamera = (initialDeviceId?: string) => {
 
       setError(null); // Clear any previous errors
 
-      console.log('Starting camera with deviceId:', deviceId || 'default');
+      // Start camera with deviceId
 
       const constraints: MediaStreamConstraints = {
         video: deviceId
@@ -68,7 +68,7 @@ const useCamera = (initialDeviceId?: string) => {
       };
 
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log('Camera stream obtained successfully');
+      // Camera stream obtained successfully
 
       // Check if we have video tracks
       if (mediaStream.getVideoTracks().length === 0) {
@@ -77,7 +77,7 @@ const useCamera = (initialDeviceId?: string) => {
 
       // Log video track info
       const videoTrack = mediaStream.getVideoTracks()[0];
-      console.log('Video track:', videoTrack.label, 'enabled:', videoTrack.enabled);
+      // Video track enabled
 
       setStream(mediaStream);
       streamRef.current = mediaStream;
@@ -93,7 +93,7 @@ const useCamera = (initialDeviceId?: string) => {
     } catch (err: any) {
       setPermissionGranted(false);
       setError(`Failed to access camera: ${err.message || 'Unknown error'}`);
-      console.error('Error accessing camera:', err);
+      // Handle error accessing camera silently
       return null;
     }
   };
@@ -103,7 +103,7 @@ const useCamera = (initialDeviceId?: string) => {
       // Stop all tracks in the current stream
       streamRef.current.getTracks().forEach(track => {
         track.stop();
-        console.log('Camera track stopped');
+        // Camera track stopped
       });
       setStream(null);
       streamRef.current = null;
@@ -128,7 +128,7 @@ const useCamera = (initialDeviceId?: string) => {
   useEffect(() => {
     // Only start if permission was granted or not yet checked
     if (isActive && permissionGranted !== false) {
-      console.log('Initial camera setup with deviceId:', currentDeviceId || 'default');
+      // Initial camera setup
       startCamera(currentDeviceId);
     }
 
