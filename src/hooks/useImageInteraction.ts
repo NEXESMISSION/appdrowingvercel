@@ -182,18 +182,7 @@ const useImageInteraction = (
           });
         }
       } 
-      // Handle tilt for small rotation changes in pinch mode
-      else if (Math.abs(rotationChange) < 5) {
-        // Handle tilt (3D perspective)
-        const tiltXChange = (currentDistance - touchState.initialDistance!) / 10;
-        const tiltYChange = rotationChange / 2;
-        
-        setSettings(prev => ({
-          ...prev,
-          tiltX: touchState.initialSettings!.tiltX + tiltXChange,
-          tiltY: touchState.initialSettings!.tiltY + tiltYChange
-        }));
-      } 
+      // We're not handling tilt via touch anymore, only via sliders 
       // Default pinch behavior (scale)
       else {
         setSettings(prev => ({

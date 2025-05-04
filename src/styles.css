@@ -265,9 +265,9 @@ body {
 /* Adjustment Panel Styles */
 .adjustment-panel {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.9); /* More opaque for better readability */
-  backdrop-filter: blur(10px); /* Modern frosted glass effect */
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  background-color: rgba(255, 255, 255, 0.75); /* More transparent */
+  backdrop-filter: blur(5px); /* Lighter frosted glass effect */
+  -webkit-backdrop-filter: blur(5px); /* For Safari */
   overflow-y: auto; /* Enable scrolling */
   padding: 15px;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -289,10 +289,10 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   position: relative;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .panel-header::after {
@@ -314,7 +314,7 @@ body {
   font-weight: 600;
 }
 
-.close-panel-button {
+.close-panel-button, .flip-camera-button {
   background: none;
   border: none;
   color: #555;
@@ -324,6 +324,11 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  margin-left: 8px;
+}
+
+.flip-camera-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .close-panel-button:hover {
@@ -338,7 +343,7 @@ body {
 
 .slider-row {
   display: flex;
-  gap: 8px;
+  gap: 5px;
 }
 
 .half-width {
@@ -457,18 +462,20 @@ body {
 .section-divider {
   position: relative;
   text-align: center;
-  margin: 10px 0 8px;
+  margin: 10px 0 5px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .section-divider::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.07);
-  z-index: 0;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
 }
 
 .section-divider span {
@@ -584,7 +591,7 @@ body {
     width: 100%;
     border-radius: 15px 15px 0 0;
     transform: translateY(100%);
-    max-height: 85vh; /* Allow more space for content */
+    max-height: 65vh; /* Reduced height to see more of the camera */
     overflow-y: auto; /* Enable scrolling */
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     padding-bottom: 30px; /* Extra padding at bottom for iOS */
@@ -625,6 +632,65 @@ body {
   .slider {
     height: 6px;
     margin: 15px 0;
+  }
+  
+  .slider-container {
+    margin-bottom: 5px;
+  }
+  
+  .panel-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 10px 0;
+    padding: 0;
+    text-align: center;
+  }
+  
+  .slider-container label {
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  
+  /* Make sliders easier to interact with on touch screens */
+  .slider {
+    height: 4px;
+    margin: 5px 0;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .section-divider {
+    margin: 12px 0 8px;
+  }
+  
+  .section-divider span {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  
+  .reset-button {
+    padding: 10px;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    background-color: rgba(66, 133, 244, 0.1);
+    color: #4285f4;
+    font-weight: 500;
+  }
+  
+  /* Fix for iOS scrolling issues */
+  .compact-sliders {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -669,11 +735,11 @@ body {
 /* Make the adjustment panel more compact on smaller screens */
 @media (max-width: 480px) {
   .adjustment-panel {
-    padding: 12px;
+    padding: 8px;
   }
   
   .slider-container {
-    margin-bottom: 8px;
+    margin-bottom: 5px;
   }
   
   .panel-title {
@@ -694,17 +760,18 @@ body {
   
   /* Make sliders easier to interact with on touch screens */
   .slider {
-    height: 6px;
+    height: 4px;
+    margin: 5px 0;
   }
   
   .slider::-webkit-slider-thumb {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
   
   .slider::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
   
   .section-divider {

@@ -55,6 +55,19 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
   return (
     <div className={`adjustment-panel ${visible ? 'visible' : ''}`}>
       <div className="panel-header">
+        {devices.length > 1 && (
+          <button className="flip-camera-button" onClick={() => {
+            // Find the next camera in the list
+            const currentIndex = devices.findIndex(d => d.deviceId === currentDeviceId);
+            const nextIndex = (currentIndex + 1) % devices.length;
+            onDeviceChange(devices[nextIndex].deviceId);
+          }} aria-label="Flip camera">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M23 4v6h-6M1 20v-6h6" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+          </button>
+        )}
         <button className="close-panel-button" onClick={onClose} aria-label="Close panel">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -203,7 +216,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             >
               {devices.map((device) => (
                 <option key={device.deviceId} value={device.deviceId}>
-                  {device.label}
+                  {device.label || `Camera ${devices.indexOf(device) + 1}`}
                 </option>
               ))}
             </select>
@@ -211,7 +224,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         )}
         
         <div className="interaction-tip">
-          <small>Tip: You can directly interact with the image using touch or mouse.</small>
+          <small>Tip: Drag to move, pinch to zoom, rotate with two fingers</small>
         </div>
       </div>
     </div>
