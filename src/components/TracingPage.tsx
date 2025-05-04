@@ -6,7 +6,6 @@ import AdjustmentPanel from './AdjustmentPanel';
 import AlignmentGuides from './AlignmentGuides';
 import ControlBar from './ControlBar';
 import useCamera from '../hooks/useCamera';
-import useFullscreen from '../hooks/useFullscreen';
 import useImageInteraction from '../hooks/useImageInteraction';
 import { OverlaySettings } from '../types';
 
@@ -32,7 +31,6 @@ const TracingPage: React.FC = () => {
   
   // Get camera with enhanced controls
   const { stream, devices, currentDeviceId, switchCamera, stopCamera } = useCamera();
-  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   useEffect(() => {
     // Get the uploaded image URL from sessionStorage
@@ -71,7 +69,7 @@ const TracingPage: React.FC = () => {
   }, [stopCamera]);
 
   const handleSettingsChange = (newSettings: Partial<OverlaySettings>) => {
-    setSettings(prev => ({
+    setSettings((prev: OverlaySettings) => ({
       ...prev,
       ...newSettings,
     }));
@@ -107,9 +105,7 @@ const TracingPage: React.FC = () => {
         
         <ControlBar
           onClose={handleClose}
-          onToggleFullscreen={toggleFullscreen}
           onToggleAdjustments={toggleAdjustments}
-          isFullscreen={isFullscreen}
           adjustmentsVisible={adjustmentsVisible}
         />
         

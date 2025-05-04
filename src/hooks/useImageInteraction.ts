@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { OverlaySettings } from '../types';
 
 interface Point {
@@ -11,6 +11,8 @@ interface TouchState {
   initialDistance?: number;
   initialAngle?: number;
   initialSettings?: OverlaySettings;
+  lastTouchTime?: number;
+  touchMode?: string; // Using string type to avoid TypeScript comparison issues
 }
 
 const useImageInteraction = (
@@ -21,6 +23,14 @@ const useImageInteraction = (
   const [isDragging, setIsDragging] = useState(false);
   const [touchState, setTouchState] = useState<TouchState>({});
   const [lastPoint, setLastPoint] = useState<Point | null>(null);
+  
+  // Use refs for performance optimization
+  const settingsRef = useRef(settings);
+  
+  // Keep refs in sync with state
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
 
   // Calculate distance between two points (for pinch zoom)
   const getDistance = (touch1: Touch, touch2: Touch): number => {
@@ -88,80 +98,119 @@ const useImageInteraction = (
 
   // Touch handlers
   const handleTouchStart = useCallback((e: TouchEvent) => {
-    if (e.target instanceof HTMLImageElement && 
-        e.target.classList.contains('image-overlay')) {
-      e.preventDefault();
-      
-      const touches = Array.from(e.touches);
-      
-      if (touches.length === 1) {
-        // Single touch - start drag
+    if (e.target instanceof HTMLImageElement &&
+      e.target.classList.contains('image-overlay')) {
+      e.preventDefault(); // Prevent default touch behavior
+
+      if (e.touches.length === 1) {
+        // Single touch - regular drag
+        const touch = e.touches[0];
         setIsDragging(true);
-        setLastPoint({ x: touches[0].clientX, y: touches[0].clientY });
-      } 
-      else if (touches.length === 2) {
-        // Two touches - start pinch/rotate
-        const initialDistance = getDistance(touches[0], touches[1]);
-        const initialAngle = getAngle(touches[0], touches[1]);
+        setLastPoint({ x: touch.clientX, y: touch.clientY });
+        setTouchState({
+          touchMode: 'drag',
+          initialSettings: { ...settingsRef.current },
+          initialTouches: Array.from(e.touches),
+          lastTouchTime: Date.now()
+        });
+      } else if (e.touches.length === 2) {
+        // Two finger gesture - pinch zoom or rotation
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        const initialDistance = getDistance(touch1, touch2);
+        const initialAngle = getAngle(touch1, touch2);
         
         setTouchState({
-          initialTouches: touches,
+          touchMode: 'pinch', // Start with pinch, may change to rotate
           initialDistance,
           initialAngle,
-          initialSettings: { ...settings }
+          initialSettings: { ...settingsRef.current },
+          initialTouches: Array.from(e.touches),
+          lastTouchTime: Date.now()
         });
       }
     }
-  }, [settings]);
+  }, []);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
-    // Always prevent default to ensure smooth touch handling
-    e.preventDefault();
-    
-    const touches = Array.from(e.touches);
-    
-    if (touches.length === 1 && isDragging && lastPoint) {
-      // Single touch - drag
-      const deltaX = touches[0].clientX - lastPoint.x;
-      const deltaY = touches[0].clientY - lastPoint.y;
-      
+    if (!touchState.touchMode) return;
+
+    e.preventDefault(); // Prevent default touch behavior
+
+    if (touchState.touchMode === 'drag') {
+      // Regular drag
+      if (e.touches.length !== 1 || !lastPoint) return;
+
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - lastPoint.x;
+      const deltaY = touch.clientY - lastPoint.y;
+
       setSettings(prev => ({
         ...prev,
         positionX: prev.positionX + deltaX,
         positionY: prev.positionY + deltaY
       }));
-      
-      setLastPoint({ x: touches[0].clientX, y: touches[0].clientY });
-    } 
-    else if (touches.length === 2 && touchState.initialTouches && 
-             touchState.initialDistance && touchState.initialAngle && 
-             touchState.initialSettings) {
-      // Two touches - handle pinch and rotate
-      const currentDistance = getDistance(touches[0], touches[1]);
-      const currentAngle = getAngle(touches[0], touches[1]);
-      
+
+      setLastPoint({ x: touch.clientX, y: touch.clientY });
+    } else if (touchState.touchMode === 'pinch' && e.touches.length === 2) {
+      // Pinch zoom or rotation
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentDistance = getDistance(touch1, touch2);
+      const currentAngle = getAngle(touch1, touch2);
+
       // Calculate scale change
-      const scaleChange = currentDistance / touchState.initialDistance;
-      const newScale = touchState.initialSettings.scale * scaleChange;
-      
+      const scaleChange = currentDistance / touchState.initialDistance!;
+      const newScale = touchState.initialSettings!.scale * scaleChange;
+
       // Calculate rotation change
-      const rotationChange = currentAngle - touchState.initialAngle;
-      const newRotation = touchState.initialSettings.rotation + rotationChange;
-      
-      // Calculate tilt based on finger positions
-      // This is a simple implementation that can be refined
-      const tiltXChange = (touches[0].clientY - touchState.initialTouches[0].clientY + 
-                          touches[1].clientY - touchState.initialTouches[1].clientY) / 10;
-      const tiltYChange = (touches[0].clientX - touchState.initialTouches[0].clientX + 
-                          touches[1].clientX - touchState.initialTouches[1].clientX) / 10;
+      const rotationChange = currentAngle - touchState.initialAngle!;
+
+      // Handle significant rotation
+      if (Math.abs(rotationChange) > 10) {
+        // Apply rotation and update mode
+        setSettings(prev => ({
+          ...prev,
+          rotation: touchState.initialSettings!.rotation + rotationChange
+        }));
+        
+        // Update mode to rotation
+        if (touchState.touchMode && touchState.touchMode.toString() !== 'rotate') {
+          setTouchState({
+            ...touchState,
+            touchMode: 'rotate'
+          });
+        }
+      } 
+      // Handle tilt for small rotation changes in pinch mode
+      else if (Math.abs(rotationChange) < 5) {
+        // Handle tilt (3D perspective)
+        const tiltXChange = (currentDistance - touchState.initialDistance!) / 10;
+        const tiltYChange = rotationChange / 2;
+        
+        setSettings(prev => ({
+          ...prev,
+          tiltX: touchState.initialSettings!.tiltX + tiltXChange,
+          tiltY: touchState.initialSettings!.tiltY + tiltYChange
+        }));
+      } 
+      // Default pinch behavior (scale)
+      else {
+        setSettings(prev => ({
+          ...prev,
+          scale: Math.max(0.1, newScale)
+        }));
+      }
+    } else if (touchState.touchMode === 'rotate' && e.touches.length === 2) {
+      // Handle rotation mode
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentAngle = getAngle(touch1, touch2);
+      const rotationChange = currentAngle - touchState.initialAngle!;
       
       setSettings(prev => ({
         ...prev,
-        scale: Math.max(0.1, newScale),
-        rotation: newRotation,
-        // Optional: update tilt based on finger movement
-        // tiltX: touchState.initialSettings.tiltX + tiltXChange,
-        // tiltY: touchState.initialSettings.tiltY + tiltYChange
+        rotation: touchState.initialSettings!.rotation + rotationChange
       }));
     }
   }, [isDragging, lastPoint, touchState, getDistance, getAngle]);
@@ -175,36 +224,36 @@ const useImageInteraction = (
   // Set up event listeners
   useEffect(() => {
     const container = containerRef.current;
-    
+
     if (container) {
       // Mouse events
       container.addEventListener('mousedown', handleMouseDown);
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
       container.addEventListener('wheel', handleWheel, { passive: false });
-      
+
       // Touch events
       container.addEventListener('touchstart', handleTouchStart, { passive: false });
       window.addEventListener('touchmove', handleTouchMove, { passive: false });
       window.addEventListener('touchend', handleTouchEnd);
-      
+
       // Cleanup
       return () => {
         container.removeEventListener('mousedown', handleMouseDown);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
         container.removeEventListener('wheel', handleWheel);
-        
+
         container.removeEventListener('touchstart', handleTouchStart);
         window.removeEventListener('touchmove', handleTouchMove);
         window.removeEventListener('touchend', handleTouchEnd);
       };
     }
   }, [
-    containerRef, 
-    handleMouseDown, 
-    handleMouseMove, 
-    handleMouseUp, 
+    containerRef,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
     handleWheel,
     handleTouchStart,
     handleTouchMove,

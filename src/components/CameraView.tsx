@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 interface CameraViewProps {
   stream: MediaStream | null;
@@ -6,21 +6,62 @@ interface CameraViewProps {
 
 const CameraView: React.FC<CameraViewProps> = ({ stream }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
+      try {
+        // Clean up any previous stream
+        if (videoRef.current.srcObject) {
+          videoRef.current.srcObject = null;
+        }
+        
+        // Set the new stream
+        videoRef.current.srcObject = stream;
+        setIsLoading(false);
+        setHasError(false);
+      } catch (err) {
+        console.error('Error attaching stream to video element:', err);
+        setHasError(true);
+      }
+    } else if (!stream) {
+      setIsLoading(true);
     }
   }, [stream]);
+  
+  const handleCanPlay = () => {
+    setIsLoading(false);
+  };
+  
+  const handleError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    console.error('Video error:', e);
+    setHasError(true);
+    setIsLoading(false);
+  };
 
   return (
-    <video
-      ref={videoRef}
-      className="camera-view"
-      autoPlay
-      playsInline
-      muted
-    />
+    <div className="camera-view-container">
+      <video
+        ref={videoRef}
+        className={`camera-view ${isLoading ? 'loading' : ''} ${hasError ? 'error' : ''}`}
+        autoPlay
+        playsInline
+        muted
+        onCanPlay={handleCanPlay}
+        onError={handleError}
+      />
+      {isLoading && !hasError && (
+        <div className="camera-loading">
+          <span>Initializing camera...</span>
+        </div>
+      )}
+      {hasError && (
+        <div className="camera-error">
+          <span>Camera error. Please check permissions and try again.</span>
+        </div>
+      )}
+    </div>
   );
 };
 

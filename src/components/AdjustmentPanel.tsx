@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { OverlaySettings, CameraDevice } from '../types';
 
 interface AdjustmentPanelProps {
@@ -20,6 +20,26 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
   onDeviceChange,
   onClose
 }) => {
+  // Local state for slider values to make them smoother
+  const [localSettings, setLocalSettings] = useState(settings);
+  
+  // Update local settings when props change
+  useEffect(() => {
+    setLocalSettings(settings);
+  }, [settings]);
+  
+  // Handle slider change with debounce
+  const handleSliderChange = (key: keyof OverlaySettings, value: number) => {
+    // Update local state immediately for smooth UI
+    setLocalSettings(prev => ({
+      ...prev,
+      [key]: value
+    }));
+    
+    // Update parent state (this will eventually update props)
+    onSettingsChange({ [key]: value });
+  };
+
   const handleReset = () => {
     onSettingsChange({
       opacity: 0.5,
@@ -35,7 +55,6 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
   return (
     <div className={`adjustment-panel ${visible ? 'visible' : ''}`}>
       <div className="panel-header">
-        <h3>Image Adjustments</h3>
         <button className="close-panel-button" onClick={onClose} aria-label="Close panel">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -44,12 +63,14 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         </button>
       </div>
       
+      <h3 className="panel-title">Image Adjustments</h3>
+      
       <div className="compact-sliders">
         {/* Opacity slider */}
         <div className="slider-container">
           <label>
             Opacity
-            <span>{Math.round(settings.opacity * 100)}%</span>
+            <span>{Math.round(localSettings.opacity * 100)}%</span>
           </label>
           <input
             type="range"
@@ -57,8 +78,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             min="0"
             max="1"
             step="0.01"
-            value={settings.opacity}
-            onChange={(e) => onSettingsChange({ opacity: parseFloat(e.target.value) })}
+            value={localSettings.opacity}
+            onChange={(e) => handleSliderChange('opacity', parseFloat(e.target.value))}
           />
         </div>
         
@@ -66,7 +87,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         <div className="slider-container">
           <label>
             Scale
-            <span>{Math.round(settings.scale * 100)}%</span>
+            <span>{Math.round(localSettings.scale * 100)}%</span>
           </label>
           <input
             type="range"
@@ -74,8 +95,8 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
             min="0.1"
             max="3"
             step="0.01"
-            value={settings.scale}
-            onChange={(e) => onSettingsChange({ scale: parseFloat(e.target.value) })}
+            value={localSettings.scale}
+            onChange={(e) => handleSliderChange('scale', parseFloat(e.target.value))}
           />
         </div>
         
@@ -84,30 +105,30 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           <div className="slider-container half-width">
             <label>
               Position X
-              <span>{Math.round(settings.positionX)}</span>
+              <span>{Math.round(localSettings.positionX)}</span>
             </label>
             <input
               type="range"
               className="slider"
               min="-300"
               max="300"
-              value={settings.positionX}
-              onChange={(e) => onSettingsChange({ positionX: parseInt(e.target.value) })}
+              value={localSettings.positionX}
+              onChange={(e) => handleSliderChange('positionX', parseInt(e.target.value))}
             />
           </div>
           
           <div className="slider-container half-width">
             <label>
               Position Y
-              <span>{Math.round(settings.positionY)}</span>
+              <span>{Math.round(localSettings.positionY)}</span>
             </label>
             <input
               type="range"
               className="slider"
               min="-300"
               max="300"
-              value={settings.positionY}
-              onChange={(e) => onSettingsChange({ positionY: parseInt(e.target.value) })}
+              value={localSettings.positionY}
+              onChange={(e) => handleSliderChange('positionY', parseInt(e.target.value))}
             />
           </div>
         </div>
@@ -116,15 +137,15 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
         <div className="slider-container">
           <label>
             Rotation
-            <span>{Math.round(settings.rotation)}°</span>
+            <span>{Math.round(localSettings.rotation)}°</span>
           </label>
           <input
             type="range"
             className="slider"
             min="-180"
             max="180"
-            value={settings.rotation}
-            onChange={(e) => onSettingsChange({ rotation: parseInt(e.target.value) })}
+            value={localSettings.rotation}
+            onChange={(e) => handleSliderChange('rotation', parseInt(e.target.value))}
           />
         </div>
         
@@ -138,30 +159,30 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({
           <div className="slider-container half-width">
             <label>
               Tilt X
-              <span>{Math.round(settings.tiltX)}°</span>
+              <span>{Math.round(localSettings.tiltX)}°</span>
             </label>
             <input
               type="range"
               className="slider"
               min="-45"
               max="45"
-              value={settings.tiltX}
-              onChange={(e) => onSettingsChange({ tiltX: parseInt(e.target.value) })}
+              value={localSettings.tiltX}
+              onChange={(e) => handleSliderChange('tiltX', parseInt(e.target.value))}
             />
           </div>
           
           <div className="slider-container half-width">
             <label>
               Tilt Y
-              <span>{Math.round(settings.tiltY)}°</span>
+              <span>{Math.round(localSettings.tiltY)}°</span>
             </label>
             <input
               type="range"
               className="slider"
               min="-45"
               max="45"
-              value={settings.tiltY}
-              onChange={(e) => onSettingsChange({ tiltY: parseInt(e.target.value) })}
+              value={localSettings.tiltY}
+              onChange={(e) => handleSliderChange('tiltY', parseInt(e.target.value))}
             />
           </div>
         </div>
