@@ -27,6 +27,7 @@
     <title>TraceMate</title>
     <!-- Mobile video optimization styles -->
     <link rel="stylesheet" href="/mobile-video.css">
+    <link rel="stylesheet" href="/video-optimization.css">
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -41,12 +42,12 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <!-- Direct script to replace hero video with main.mp4 -->
+    <!-- Optimized video loading script -->
     <script>
       // This script runs as soon as the page starts loading
       document.addEventListener('DOMContentLoaded', function() {
-        // Function to replace all video sources in the hero section
-        function replaceHeroVideo() {
+        // Function to optimize hero videos
+        function optimizeHeroVideo() {
           // Get all video elements
           const videos = document.querySelectorAll('video');
           
@@ -58,19 +59,23 @@
                 video.removeChild(video.firstChild);
               }
               
-              // Create new source element with main.mp4 using the exact path provided
+              // Create new source element with main.mp4
               const source = document.createElement('source');
               source.src = '/assets/main.mp4'; // Web-relative path for the browser
               source.type = 'video/mp4';
               
-              // Set specific attributes for mobile optimization
+              // Add a poster image to show while video loads
+              video.setAttribute('poster', '/assets/befor.png');
+              
+              // Set specific attributes for optimization
               video.setAttribute('playsinline', ''); // Critical for iOS
               video.setAttribute('webkit-playsinline', ''); // For older iOS
               video.setAttribute('muted', '');
               video.setAttribute('autoplay', '');
               video.setAttribute('loop', '');
+              video.setAttribute('preload', 'auto'); // Preload the video
               
-              // Advanced mobile centering technique - with transparent background
+              // Advanced mobile centering technique with transparent background
               video.style.objectFit = 'cover';
               video.style.width = 'auto';
               video.style.height = 'auto';
@@ -88,18 +93,35 @@
               // Add the new source to the video
               video.appendChild(source);
               
-              // Reload the video
+              // Add loading event listeners
+              video.addEventListener('loadeddata', function() {
+                video.play();
+                video.style.opacity = '1';
+              });
+              
+              // Handle errors gracefully
+              video.addEventListener('error', function() {
+                // If video fails, show the poster image
+                video.style.display = 'none';
+                const container = video.closest('.video-container');
+                if (container) {
+                  container.style.backgroundImage = 'url("/assets/befor.png")';
+                  container.style.backgroundSize = 'cover';
+                  container.style.backgroundPosition = 'center center';
+                }
+              });
+              
+              // Load and play the video
               video.load();
-              video.play();
             }
           });
         }
         
         // Execute immediately
-        replaceHeroVideo();
+        optimizeHeroVideo();
         
         // Also try again after a short delay to ensure the DOM is fully loaded
-        setTimeout(replaceHeroVideo, 1000);
+        setTimeout(optimizeHeroVideo, 500);
         
         // Fix FAQ questions disappearing when clicked
         function fixFAQQuestions() {
