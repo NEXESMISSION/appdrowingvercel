@@ -279,7 +279,6 @@ const TraceMate: React.FC = () => {
             muted 
             loop 
             playsInline
-            poster="/assets/befor.png"
             preload="auto"
           >
             <source src="/assets/2.mp4" type="video/mp4" />
