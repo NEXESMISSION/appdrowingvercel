@@ -1,0 +1,8 @@
+import React from 'react';
+import OptimizedLandingPage from './LandingPage.optimized';
+
+const LandingPage: React.FC = () => {
+  return <OptimizedLandingPage />;
+};
+
+export default LandingPage;

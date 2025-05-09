@@ -58,6 +58,61 @@ body {
   border-radius: 2px;
 }
 
+/* Logo container styles */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+
+.logo-container {
+  margin-bottom: 30px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: row;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.app-logo {
+  max-width: 75px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  transition: transform 0.3s ease;
+  position: relative;
+  top: -2px; /* Slight adjustment for better alignment */
+}
+
+.logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #ffffff 10%, #4285f4 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  padding-bottom: 2px;
+  display: inline-block;
+}
+
+.app-logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-container::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #4285f4;
+  border-radius: 2px;
+}
+
 .instructions {
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 12px;
@@ -1189,5 +1244,121 @@ body {
   /* Fix for iOS scrolling issues */
   .compact-sliders {
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Landscape orientation styles for mobile devices */
+@media (max-width: 896px) and (orientation: landscape) {
+  /* Adjust the tracing page to fit landscape mode */
+  .tracing-page {
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+  }
+  
+  /* Adjust camera container for landscape */
+  .camera-container {
+    height: 100vh !important;
+    width: 100vw !important;
+  }
+  
+  /* Position the control bar on the right side in landscape */
+  .control-bar {
+    position: fixed !important;
+    top: 50% !important;
+    right: 10px !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: translateY(-50%) !important;
+    flex-direction: column !important;
+    height: auto !important;
+    width: auto !important;
+    padding: 15px 10px !important;
+    margin: 0 !important;
+    z-index: 1000 !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Control buttons in landscape mode */
+  .control-button {
+    margin: 8px 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+    
+  /* Position tooltips in landscape mode */
+  .help-tooltip, .camera-tooltip {
+    position: absolute !important;
+    right: 50px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    left: auto !important;
+    bottom: auto !important;
+  }
+  
+  /* Adjust the adjustment panel for landscape */
+  .adjustment-panel {
+    position: fixed !important;
+    top: 50% !important;
+    left: 10px !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+    max-height: 90vh !important;
+    max-width: 250px !important;
+    width: 250px !important;
+    margin: 0 !important;
+    z-index: 1000 !important;
+    background-color: rgba(0, 0, 0, 0.85) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    overflow-y: auto !important;
+    padding: 15px !important;
+  }
+  
+  /* Adjust the slider layout in landscape mode */
+  .slider-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+    
+  .panel-header {
+    margin-bottom: 10px !important;
+    text-align: center !important;
+    position: relative !important;
+  }
+    
+  .close-panel-button {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+  }
+  
+  /* Make sliders more compact in landscape */
+  .slider-mini {
+    margin-bottom: 5px !important;
+  }
+  
+  /* Adjust overlay hint position for landscape */
+  .overlay-hint {
+    bottom: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, 50%) !important;
+    max-width: 80% !important;
+  }
+  
+  /* Ensure camera view fills the screen properly */
+  .camera-view {
+    height: 100vh !important;
+    width: 100vw !important;
+    object-fit: cover !important;
+  }
+  
+  /* Adjust alignment guides for landscape */
+  .alignment-guides {
+    width: 100vw !important;
+    height: 100vh !important;
   }
 }

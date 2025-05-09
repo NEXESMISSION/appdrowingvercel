@@ -1,0 +1,97 @@
+/* Auto-Flipping Cards for Before/After Comparison */
+.comparison-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xl);
+  margin: var(--spacing-xl) auto;
+  max-width: 1200px;
+}
+
+.comparison-pair {
+  display: flex;
+  gap: var(--spacing-xl);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.auto-flip-card {
+  perspective: 1000px;
+  width: 350px;
+  height: 450px;
+  margin-bottom: var(--spacing-md);
+  box-sizing: border-box;
+}
+
+.auto-flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--border-radius-lg);
+}
+
+.auto-flip-card-front, .auto-flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.auto-flip-card-front {
+  background-color: var(--background-alt);
+}
+
+.auto-flip-card-back {
+  background-color: var(--background-alt);
+  transform: rotateY(180deg);
+}
+
+.auto-flip-card-front img, .auto-flip-card-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auto-flip-card-label {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-full);
+  font-weight: 600;
+  font-size: 1rem;
+  z-index: 2;
+}
+
+.before-card .auto-flip-card-label {
+  background-color: rgba(255, 0, 0, 0.7);
+}
+
+.after-card .auto-flip-card-label {
+  background-color: rgba(0, 122, 255, 0.7);
+}
+
+.comparison-caption {
+  margin-top: var(--spacing-sm);
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.transformation-text {
+  text-align: center;
+  max-width: 800px;
+  margin: var(--spacing-xl) auto 0;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--text);
+}

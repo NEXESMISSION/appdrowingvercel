@@ -25,6 +25,8 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>TraceMate</title>
+    <!-- Mobile video optimization styles -->
+    <link rel="stylesheet" href="/mobile-video.css">
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -39,5 +41,120 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <!-- Direct script to replace hero video with main.mp4 -->
+    <script>
+      // This script runs as soon as the page starts loading
+      document.addEventListener('DOMContentLoaded', function() {
+        // Function to replace all video sources in the hero section
+        function replaceHeroVideo() {
+          // Get all video elements
+          const videos = document.querySelectorAll('video');
+          
+          videos.forEach(function(video) {
+            // Check if this video is in the hero section
+            if (video.closest('.hero') || video.classList.contains('hero-video')) {
+              // Remove all existing sources
+              while (video.firstChild) {
+                video.removeChild(video.firstChild);
+              }
+              
+              // Create new source element with main.mp4 using the exact path provided
+              const source = document.createElement('source');
+              source.src = '/assets/main.mp4'; // Web-relative path for the browser
+              source.type = 'video/mp4';
+              
+              // Set specific attributes for mobile optimization
+              video.setAttribute('playsinline', ''); // Critical for iOS
+              video.setAttribute('webkit-playsinline', ''); // For older iOS
+              video.setAttribute('muted', '');
+              video.setAttribute('autoplay', '');
+              video.setAttribute('loop', '');
+              
+              // Advanced mobile centering technique - with transparent background
+              video.style.objectFit = 'cover';
+              video.style.width = 'auto';
+              video.style.height = 'auto';
+              video.style.minWidth = '100%';
+              video.style.minHeight = '100%';
+              video.style.position = 'absolute';
+              video.style.top = '50%';
+              video.style.left = '50%';
+              video.style.transform = 'translate(-50%, -50%)';
+              video.style.objectPosition = 'center center';
+              video.style.background = 'transparent';
+              video.style.backgroundColor = 'transparent';
+              video.style.opacity = '1';
+              
+              // Add the new source to the video
+              video.appendChild(source);
+              
+              // Reload the video
+              video.load();
+              video.play();
+            }
+          });
+        }
+        
+        // Execute immediately
+        replaceHeroVideo();
+        
+        // Also try again after a short delay to ensure the DOM is fully loaded
+        setTimeout(replaceHeroVideo, 1000);
+        
+        // Fix FAQ questions disappearing when clicked
+        function fixFAQQuestions() {
+          const faqQuestions = document.querySelectorAll('.faq-question');
+          
+          faqQuestions.forEach(question => {
+            // Make sure we don't double-attach event listeners
+            if (!question.dataset.fixedListener) {
+              // Use a new event handler to prevent default behavior and maintain visibility
+              question.dataset.fixedListener = true;
+              
+              // Clone the button to remove all event listeners
+              const newQuestion = question.cloneNode(true);
+              question.parentNode.replaceChild(newQuestion, question);
+              
+              // Add our custom event listener
+              newQuestion.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Get the answer element (next sibling to the question button)
+                const answer = this.nextElementSibling;
+                
+                // Toggle active class on the question
+                this.classList.toggle('active');
+                
+                // Toggle active class on the answer
+                if (answer && answer.classList.contains('faq-answer')) {
+                  answer.classList.toggle('active');
+                }
+                
+                // Toggle the arrow icon
+                const icon = this.querySelector('.icon');
+                if (icon) {
+                  icon.textContent = this.classList.contains('active') ? '↑' : '↓';
+                }
+              });
+            }
+          });
+        }
+        
+        // Run after DOM is loaded and also after a delay
+        setTimeout(fixFAQQuestions, 1000);
+        
+        // Also run when user scrolls near the FAQ section
+        document.addEventListener('scroll', function() {
+          const faqSection = document.getElementById('faq');
+          if (faqSection) {
+            const rect = faqSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              fixFAQQuestions();
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>

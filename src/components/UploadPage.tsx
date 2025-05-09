@@ -56,7 +56,10 @@ const UploadPage: React.FC = () => {
 
   return (
     <div className="upload-page">
-      <h1>TraceMate</h1>
+      <div className="logo-container">
+        <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="app-logo" />
+        <span className="logo-text">TraceMate</span>
+      </div>
       
       {isCheckingPermission ? (
         <div className="loading-message">

@@ -1,0 +1,86 @@
+/* Extreme mobile fix for video alignment - this will override all other styles */
+
+/* Force proper alignment for all mobile devices */
+@media (max-width: 768px) {
+  /* Reset all video container styles */
+  .video-demos,
+  .video-carousel,
+  .see-it-in-action .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    overflow: hidden !important;
+  }
+  
+  /* Force flex column layout */
+  .video-carousel {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 30px !important;
+  }
+  
+  /* Strict video item styling */
+  .video-item {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto 30px !important;
+    padding: 0 !important;
+    display: block !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    height: auto !important;
+  }
+  
+  /* Extreme video styling */
+  .video-item video,
+  video.tall-video {
+    width: 100% !important;
+    height: 700px !important;
+    min-height: 700px !important;
+    max-height: 700px !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  /* Clean title styling */
+  .video-item p,
+  .video-title {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 15px !important;
+    margin: 0 !important;
+    background-color: white !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Fix section title */
+  .see-it-in-action .section-title {
+    margin-bottom: 20px !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure no floating elements */
+  .see-it-in-action * {
+    float: none !important;
+  }
+  
+  /* Force full width container */
+  .see-it-in-action .container {
+    width: 100% !important;
+    padding: 0 !important;
+  }
+}

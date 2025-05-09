@@ -1,0 +1,133 @@
+/* Video Section Styles */
+.see-it-in-action {
+  padding-top: var(--spacing-4xl);
+  padding-bottom: var(--spacing-4xl);
+  background-color: var(--background);
+  position: relative;
+}
+
+.see-it-in-action .section-title {
+  margin-bottom: var(--spacing-xl);
+}
+
+.video-demos.full-width {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.video-carousel {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 var(--spacing-lg);
+  align-items: stretch;
+  height: 100%;
+}
+
+.video-item {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1/1.5; /* Making it much taller than wide */
+  height: auto;
+}
+
+.video-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.video-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  flex: 1;
+}
+
+.video-item p {
+  text-align: center;
+  padding: var(--spacing-md);
+  font-weight: 500;
+  background-color: var(--background-alt);
+  margin: 0;
+  color: var(--text-dark);
+}
+
+.video-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.try-it-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-3xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Tall video styles for mobile */
+@media (max-width: 768px) {
+  /* Target all videos in the video section */
+  .video-carousel {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .video-item {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px !important;
+    aspect-ratio: 1/1.5; /* Even taller on mobile */
+  }
+  
+  .video-title {
+    text-align: center !important;
+    padding: 10px !important;
+    font-weight: 500 !important;
+  }
+}
+
+.try-it-button {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--text-light);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 14px 28px;
+  border-radius: var(--border-radius-full);
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.try-it-button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-light);
+}

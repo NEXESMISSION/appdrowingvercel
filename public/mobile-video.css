@@ -1,0 +1,52 @@
+/* Mobile Video Optimization for TraceMate */
+@media (max-width: 767px) {
+  /* Maximum specificity selectors to ensure these styles take precedence */
+  .hero video.hero-video,
+  .hero > .video-container > video.hero-video,
+  video.hero-video {
+    /* Advanced centering technique */
+    width: auto !important;
+    height: auto !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    object-position: center center !important;
+    opacity: 1 !important; /* Full opacity */
+    z-index: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+  
+  /* Hero content positioning */
+  .hero-content {
+    z-index: 2 !important;
+    position: relative !important;
+  }
+  
+  /* Video container */
+  .hero .video-container,
+  .video-container {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 0 !important;
+    background-color: transparent !important; /* Ensure no background color */
+  }
+  
+  /* Hero section positioning */
+  .hero {
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 300px !important;
+  }
+}
