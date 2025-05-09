@@ -28,6 +28,7 @@
     <!-- Mobile video optimization styles -->
     <link rel="stylesheet" href="/mobile-video.css">
     <link rel="stylesheet" href="/video-optimization.css">
+    <link rel="stylesheet" href="/action-videos.css">
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -46,34 +47,34 @@
     <script>
       // This script runs as soon as the page starts loading
       document.addEventListener('DOMContentLoaded', function() {
-        // Function to optimize hero videos
-        function optimizeHeroVideo() {
+        // Function to optimize all videos with immediate display
+        function optimizeVideos() {
           // Get all video elements
           const videos = document.querySelectorAll('video');
           
           videos.forEach(function(video) {
-            // Check if this video is in the hero section
-            if (video.closest('.hero') || video.classList.contains('hero-video')) {
-              // Remove all existing sources
-              while (video.firstChild) {
-                video.removeChild(video.firstChild);
+            // Different handling based on video type
+            const isHeroVideo = video.closest('.hero') || video.classList.contains('hero-video');
+            const isActionVideo = video.closest('.video-item') || video.classList.contains('tall-video');
+            
+            // Remove all existing sources
+            while (video.firstChild) {
+              video.removeChild(video.firstChild);
+            }
+            
+            // Create new source element with appropriate video
+            const source = document.createElement('source');
+            
+            if (isHeroVideo) {
+              // For hero video
+              source.src = '/assets/main.mp4';
+              
+              // Create a background container with the same image as video content
+              const container = video.closest('.video-container');
+              if (container) {
+                // Set the container background to match video content
+                container.style.backgroundColor = 'rgba(0,0,0,0.2)';
               }
-              
-              // Create new source element with main.mp4
-              const source = document.createElement('source');
-              source.src = '/assets/main.mp4'; // Web-relative path for the browser
-              source.type = 'video/mp4';
-              
-              // Add a poster image to show while video loads
-              video.setAttribute('poster', '/assets/befor.png');
-              
-              // Set specific attributes for optimization
-              video.setAttribute('playsinline', ''); // Critical for iOS
-              video.setAttribute('webkit-playsinline', ''); // For older iOS
-              video.setAttribute('muted', '');
-              video.setAttribute('autoplay', '');
-              video.setAttribute('loop', '');
-              video.setAttribute('preload', 'auto'); // Preload the video
               
               // Advanced mobile centering technique with transparent background
               video.style.objectFit = 'cover';
@@ -88,40 +89,69 @@
               video.style.objectPosition = 'center center';
               video.style.background = 'transparent';
               video.style.backgroundColor = 'transparent';
-              video.style.opacity = '1';
+            } else if (isActionVideo) {
+              // For action videos, use the correct source based on the original
+              const originalSrc = video.querySelector('source');
+              if (originalSrc && originalSrc.src) {
+                // Extract the file name from the original source
+                const fileName = originalSrc.src.split('/').pop();
+                source.src = '/assets/' + fileName;
+              } else {
+                // Fallback if we can't determine the original source
+                const videoIndex = Array.from(video.closest('.video-carousel').querySelectorAll('.video-item')).indexOf(video.closest('.video-item'));
+                source.src = `/assets/${videoIndex + 1}.mp4`;
+              }
               
-              // Add the new source to the video
-              video.appendChild(source);
-              
-              // Add loading event listeners
-              video.addEventListener('loadeddata', function() {
-                video.play();
-                video.style.opacity = '1';
-              });
-              
-              // Handle errors gracefully
-              video.addEventListener('error', function() {
-                // If video fails, show the poster image
-                video.style.display = 'none';
-                const container = video.closest('.video-container');
-                if (container) {
-                  container.style.backgroundImage = 'url("/assets/befor.png")';
-                  container.style.backgroundSize = 'cover';
-                  container.style.backgroundPosition = 'center center';
-                }
-              });
-              
-              // Load and play the video
-              video.load();
+              // Style for action videos
+              video.style.objectFit = 'cover';
+              video.style.width = '100%';
+              video.style.height = 'auto';
+              video.style.background = 'transparent';
             }
+            
+            source.type = 'video/mp4';
+            
+            // Set common attributes for all videos
+            video.removeAttribute('poster'); // Remove poster to prevent flashing
+            video.setAttribute('playsinline', ''); // Critical for iOS
+            video.setAttribute('webkit-playsinline', ''); // For older iOS
+            video.setAttribute('muted', '');
+            video.setAttribute('autoplay', '');
+            video.setAttribute('loop', '');
+            video.setAttribute('preload', 'auto'); // Preload the video
+            
+            // Add the new source to the video
+            video.appendChild(source);
+            
+            // Handle errors gracefully
+            video.addEventListener('error', function() {
+              // If video fails, show a background color instead
+              video.style.display = 'none';
+              const container = video.closest('.video-container') || video.closest('.video-item');
+              if (container) {
+                container.style.backgroundColor = '#1a1a2e';
+              }
+            });
+            
+            // Start loading the video immediately
+            video.load();
+            
+            // Force play as soon as possible
+            video.play().catch(function(e) {
+              console.log('Auto-play prevented:', e);
+              // Still try to play after user interaction
+              document.addEventListener('click', function() {
+                video.play().catch(function() {});
+              }, {once: true});
+            });
           });
         }
         
         // Execute immediately
-        optimizeHeroVideo();
+        optimizeVideos();
         
-        // Also try again after a short delay to ensure the DOM is fully loaded
-        setTimeout(optimizeHeroVideo, 500);
+        // Also try again after a very short delay to ensure the DOM is fully loaded
+        setTimeout(optimizeVideos, 100);
         
         // Fix FAQ questions disappearing when clicked
         function fixFAQQuestions() {

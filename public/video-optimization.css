@@ -3,15 +3,10 @@
   position: relative;
   overflow: hidden;
   background-color: transparent;
-  background-image: url('/assets/befor.png');
-  background-size: cover;
-  background-position: center center;
 }
 
 .hero-video {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  will-change: opacity;
+  opacity: 1; /* Start fully visible */
   transform: translate(-50%, -50%);
   position: absolute;
   top: 50%;
@@ -21,10 +16,21 @@
   width: auto;
   height: auto;
   background: transparent;
+  object-fit: cover;
+  z-index: 1; /* Ensure video is above background */
 }
 
-.hero-video.loaded {
-  opacity: 1;
+/* Hide the default poster display */
+.hero-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Remove poster image display */
+video[poster] {
+  object-fit: cover;
+  object-position: center center;
 }
 
 /* Add a low-resolution placeholder while video loads */
