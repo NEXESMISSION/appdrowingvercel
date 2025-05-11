@@ -5,7 +5,7 @@ import ImageOverlay from './ImageOverlay';
 import AdjustmentPanel from './AdjustmentPanel';
 import AlignmentGuides from './AlignmentGuides';
 import ControlBar from './ControlBar';
-import useCamera from '../hooks/useCamera';
+import useCameraHook from '../hooks/useCameraHook';
 import useImageInteraction from '../hooks/useImageInteraction';
 import { OverlaySettings } from '../types';
 import sessionLimitService from '../services/sessionLimitService';
@@ -16,6 +16,7 @@ import '../styles/GlobalDarkTheme.css';
 import '../styles/ModernEffects.css';
 import '../styles/SessionLimit.css';
 import '../styles/TracingPage.css';
+import '../styles/CameraView.css';
 
 const TracingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const TracingPage: React.FC = () => {
   const { settings, setSettings } = useImageInteraction(initialSettings, containerRef);
   
   // Get camera with enhanced controls
-  const { stream, devices, currentDeviceId, switchCamera, stopCamera } = useCamera();
+  const { stream, devices, currentDeviceId, switchCamera, stopCamera, error: cameraError, requestPermission } = useCameraHook();
 
   useEffect(() => {
     // Get the uploaded image URL from sessionStorage
@@ -185,6 +186,16 @@ const TracingPage: React.FC = () => {
     setAdjustmentsVisible(false);
   };
 
+  // Function to handle camera permission request
+  const handleRequestCameraPermission = async () => {
+    const result = await requestPermission();
+    if (result) {
+      console.log('Camera permission granted');
+    } else {
+      console.error('Failed to get camera permission');
+    }
+  };
+
   // Session timer for free users
   useEffect(() => {
     // Only start the timer for non-premium users
@@ -230,12 +241,26 @@ const TracingPage: React.FC = () => {
   };
 
   return (
-    <div className="tracing-page animate-fadeIn" ref={containerRef}>
+    <div className={`tracing-page ${adjustmentsVisible ? 'with-panel' : ''}`} ref={containerRef}>
       <Link to="/" className="tracing-logo-container" title="Go to Home Page">
         <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="tracing-app-logo" />
         <span className="tracing-logo-text">TraceMate</span>
       </Link>
       <div className="camera-container">
+        {cameraError && (
+          <div className="camera-permission-overlay">
+            <div className="camera-permission-content">
+              <h3>Camera Access Required</h3>
+              <p>{cameraError}</p>
+              <button 
+                className="camera-permission-button"
+                onClick={handleRequestCameraPermission}
+              >
+                Grant Camera Access
+              </button>
+            </div>
+          </div>
+        )}
         <CameraView stream={stream} />
         
         {imageUrl && (
