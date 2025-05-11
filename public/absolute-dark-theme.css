@@ -1,0 +1,93 @@
+/* Absolute Dark Theme Overrides - Highest specificity selectors */
+
+/* Target the most specific elements with !important flags */
+html[lang="en"] body,
+html[lang="en"] #root,
+html[lang="en"] #root > div,
+html[lang="en"] #root > div > div,
+html[lang="en"] .app,
+html[lang="en"] .landing-page,
+html[lang="en"] .upload-page,
+html[lang="en"] .tracing-page,
+html[lang="en"] .payment-page,
+html[lang="en"] .login-page {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+
+/* Target all sections with high specificity */
+html[lang="en"] .hero-section,
+html[lang="en"] .how-it-works-section,
+html[lang="en"] .before-after-section,
+html[lang="en"] .pricing-section,
+html[lang="en"] .testimonials-section,
+html[lang="en"] .faq-section,
+html[lang="en"] .footer,
+html[lang="en"] section,
+html[lang="en"] header,
+html[lang="en"] footer,
+html[lang="en"] main,
+html[lang="en"] article,
+html[lang="en"] aside,
+html[lang="en"] nav {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+
+/* Target all container elements */
+html[lang="en"] [class*="container"],
+html[lang="en"] [class*="wrapper"],
+html[lang="en"] [class*="content"],
+html[lang="en"] [class*="section"],
+html[lang="en"] [class*="panel"],
+html[lang="en"] [class*="box"],
+html[lang="en"] [class*="card"] {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+
+/* Allow specific elements to have transparent backgrounds */
+html[lang="en"] video,
+html[lang="en"] .video-container,
+html[lang="en"] .hero-video-container,
+html[lang="en"] .video-wrapper,
+html[lang="en"] .hero-overlay,
+html[lang="en"] .gradient-overlay,
+html[lang="en"] .particle-container,
+html[lang="en"] img,
+html[lang="en"] svg,
+html[lang="en"] [class*="gradient"],
+html[lang="en"] [class*="overlay"] {
+  background-color: transparent !important;
+}
+
+/* Fix for TraceMate logo */
+html[lang="en"] .logo-container,
+html[lang="en"] .logo-wrapper,
+html[lang="en"] .logo {
+  background-color: transparent !important;
+}
+
+/* Fix for gradient text */
+html[lang="en"] [class*="gradient-text"] {
+  background-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Fix for mobile layout */
+@media (max-width: 767px) {
+  html[lang="en"] .before-after-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  html[lang="en"] .before-after-image {
+    height: auto !important;
+    max-height: 200px !important;
+  }
+  
+  html[lang="en"] .how-it-works-video {
+    height: 280px !important;
+  }
+}

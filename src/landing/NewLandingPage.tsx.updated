@@ -1,0 +1,527 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { PlayCircle, ChevronRight, Check, Star, ArrowRight, Plus, Minus, ChevronLeft } from 'lucide-react';
+import './NewLandingPage.css';
+import '../styles/VideoPosterPlaceholders.css';
+
+// Custom gradient text component
+const GradientText = ({ children, className = "" }) => (
+  <span className={`bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent font-bold ${className}`}>
+    {children}
+  </span>
+);
+
+// Custom button component
+const Button = ({ children, primary = false, className = "", onClick }) => {
+  const baseClasses = "font-medium rounded-md transition-all duration-300 transform hover:scale-105 shadow-md px-6 py-3";
+  const primaryClasses = "bg-gradient-to-r from-blue-500 to-blue-400 text-white hover:shadow-lg";
+  const secondaryClasses = "bg-gray-800 text-white border border-gray-700 hover:bg-gray-700";
+  
+  return (
+    <button 
+      className={`${baseClasses} ${primary ? primaryClasses : secondaryClasses} ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
+// Compact Step card component with vertical video
+const StepCard = ({ number, videoThumbnail }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  
+  return (
+    <div className="flex items-center justify-center">
+      <div className="relative rounded-xl overflow-hidden w-full max-w-xs">
+        {/* Mobile: Shorter video thumbnail */}
+        <div className="md:hidden aspect-[9/16] max-h-64 bg-gray-700 rounded-xl relative flex items-center justify-center">
+          <img src="/api/placeholder/270/480" alt={`Video ${number}`} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+            <PlayCircle 
+              className="w-12 h-12 text-white opacity-80 hover:opacity-100 cursor-pointer transition-opacity" 
+              onClick={() => setIsPlaying(!isPlaying)}
+            />
+          </div>
+        </div>
+        
+        {/* Desktop: Normal video thumbnail */}
+        <div className="hidden md:flex aspect-[9/16] bg-gray-700 rounded-xl relative items-center justify-center">
+          <img src="/api/placeholder/360/640" alt={`Video ${number}`} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+            <PlayCircle 
+              className="w-16 h-16 text-white opacity-80 hover:opacity-100 cursor-pointer transition-opacity" 
+              onClick={() => setIsPlaying(!isPlaying)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Testimonial card component
+const TestimonialCard = ({ text, name, role }) => (
+  <div className="bg-gray-800 rounded-xl p-6 shadow-md min-w-[280px] md:min-w-[350px] flex-shrink-0 mx-2">
+    <p className="text-gray-300 mb-4">{text}</p>
+    <div>
+      <p className="text-white font-semibold">{name}</p>
+      <p className="text-gray-400 text-sm">{role}</p>
+    </div>
+  </div>
+);
+
+// Pricing card component
+const PricingCard = ({ free = false, price, title, feature, popular = false }) => (
+  <div className={`bg-gray-800 rounded-xl p-6 flex flex-col ${popular ? 'border-2 border-blue-500 relative' : 'border border-gray-700'}`}>
+    {popular && (
+      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+        Most Popular
+      </div>
+    )}
+    <div className="mb-6 text-center">
+      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
+      <p className="text-3xl font-bold mb-1 flex items-center justify-center">
+        <span className="text-gray-400 text-lg mr-1">$</span>
+        <span className="text-white">{price}</span>
+      </p>
+      <p className="text-gray-400 text-sm">{free ? '' : 'one-time payment'}</p>
+    </div>
+    <div className="mb-6 flex items-start">
+      <Check className="text-blue-400 mr-2 mt-1 flex-shrink-0" size={18} />
+      <p className="text-gray-300">{feature}</p>
+    </div>
+    <div className="mt-auto space-y-3">
+      <Button primary={popular} className="w-full">
+        {free ? 'Try' : 'Buy'}
+      </Button>
+      <Button primary={false} className="w-full">
+        {free ? 'Start' : 'Try'}
+      </Button>
+    </div>
+  </div>
+);
+
+// FAQ Item component
+const FAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div className="border-b border-gray-700 py-4">
+      <button 
+        className="flex justify-between items-center w-full text-left text-white font-medium" 
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>{question}</span>
+        {isOpen ? <Minus size={20} /> : <Plus size={20} />}
+      </button>
+      {isOpen && (
+        <div className="text-gray-300 mt-2 pl-0">
+          {answer}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Fixed Testimonial Carousel
+const TestimonialCarousel = ({ testimonials }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  
+  const nextTestimonial = () => {
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
+  };
+  
+  const prevTestimonial = () => {
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+  
+  // Show current testimonial and peek at the next one
+  const visibleTestimonials = () => {
+    // Main testimonial
+    const current = testimonials[activeIndex];
+    
+    // Peek at next testimonial (for desktop view)
+    const nextIndex = (activeIndex + 1) % testimonials.length;
+    const next = testimonials[nextIndex];
+    
+    return [
+      { ...current, index: activeIndex }, 
+      { ...next, index: nextIndex }
+    ];
+  };
+  
+  return (
+    <div className="relative">
+      <div className="flex overflow-x-hidden relative">
+        <div className="flex w-full">
+          {visibleTestimonials().map((testimonial, idx) => (
+            <div 
+              key={testimonial.index} 
+              className={`flex-shrink-0 transition-all duration-300 transform px-2 ${
+                idx === 0 ? 'w-full md:w-2/3' : 'hidden md:block md:w-1/3 opacity-40'
+              }`}
+            >
+              <TestimonialCard 
+                text={testimonial.text}
+                name={testimonial.name}
+                role={testimonial.role}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="flex items-center justify-center mt-6 gap-4">
+        <button 
+          className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full text-white shadow-md"
+          onClick={prevTestimonial}
+          aria-label="Previous testimonial"
+        >
+          <ChevronLeft size={20} />
+        </button>
+        
+        <div className="flex space-x-2">
+          {testimonials.map((_, i) => (
+            <button
+              key={i}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                i === activeIndex ? 'bg-blue-500' : 'bg-gray-600'
+              }`}
+              onClick={() => setActiveIndex(i)}
+              aria-label={`Go to testimonial ${i + 1}`}
+            />
+          ))}
+        </div>
+        
+        <button 
+          className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full text-white shadow-md"
+          onClick={nextTestimonial}
+          aria-label="Next testimonial"
+        >
+          <ChevronRight size={20} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const NewLandingPage: React.FC = () => {
+  // State management
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Refs
+  const headerRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Example testimonial data
+  const testimonials = [
+    { 
+      text: "TraceMate has revolutionized how I analyze network traffic patterns. What used to take hours now takes minutes.",
+      name: "Sarah Johnson",
+      role: "Network Security Analyst" 
+    },
+    { 
+      text: "The pattern recognition capabilities are unmatched. I've discovered insights that would have been impossible to find manually.",
+      name: "Michael Chen",
+      role: "Data Scientist" 
+    },
+    { 
+      text: "Worth every penny! The one-time payment model is refreshing in a world of endless subscriptions.",
+      name: "Alex Rodriguez",
+      role: "Software Developer" 
+    }
+  ];
+  
+  // Example FAQ data
+  const faqItems = [
+    { 
+      question: "What is TraceMate?", 
+      answer: "TraceMate is a powerful application that helps you trace and analyze data patterns efficiently, providing insights that would be difficult to spot manually." 
+    },
+    { 
+      question: "How much does TraceMate cost?", 
+      answer: "TraceMate offers a free plan with limited capabilities and a premium plan for $25 (one-time payment) that unlocks all features forever." 
+    },
+    { 
+      question: "Do you offer refunds?", 
+      answer: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with TraceMate Premium, we'll issue a full refund." 
+    },
+    { 
+      question: "How do I get started?", 
+      answer: "You can start using TraceMate today by clicking the 'Try It Now' button. No credit card required for the free plan." 
+    }
+  ];
+  
+  // Toggle FAQ item
+  const toggleFAQ = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  // Get current year for footer
+  const currentYear = new Date().getFullYear();
+
+  // Handle scroll to section
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const headerHeight = headerRef.current?.offsetHeight || 0;
+      const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      window.scrollTo({
+        top: sectionTop,
+        behavior: 'smooth'
+      });
+    }
+    setIsMenuOpen(false);
+  };
+
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Handle scroll events for header
+  useEffect(() => {
+    const handleScroll = () => {
+      // Update header style based on scroll position
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Auto-play hero video on load
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.log('Auto-play prevented:', err);
+      });
+    }
+  }, []);
+
+  return (
+    <div className="bg-gray-900 text-white min-h-screen">
+      {/* Header with logo and sign-in button */}
+      <header 
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 shadow-lg py-2' : 'bg-transparent py-4'}`}
+      >
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          {/* Logo */}
+          <div className="flex items-center">
+            <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="h-10 w-10 mr-3" />
+            <span className="text-xl font-semibold" style={{
+              fontFamily: 'Poppins', 
+              background: 'linear-gradient(to right, #ffffff, #4a9fff)', 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent'
+            }}>
+              TraceMate
+            </span>
+          </div>
+          
+          {/* Sign In Button */}
+          <div>
+            <Link to="/login">
+              <Button primary={false} className="px-4 py-2">
+                Sign In
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <div className="absolute inset-0 bg-black bg-opacity-70 z-10"></div>
+        <div className="relative z-20 max-w-4xl mx-auto text-center px-4">
+          <div className="flex justify-center items-center mb-6">
+            <div className="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center mr-3">
+              <span className="text-white font-bold">TM</span>
+            </div>
+            <h3 className="text-xl md:text-2xl font-semibold">
+              <GradientText>TraceMate</GradientText>
+            </h3>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <GradientText>Your Ultimate Tracing Companion</GradientText>
+          </h1>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Trace, analyze, and understand data patterns with unprecedented ease. 
+            Unlock insights that would be impossible to spot manually.
+          </p>
+          <Button primary className="text-lg px-8 py-4">
+            Try It Now
+          </Button>
+        </div>
+        <div className="absolute inset-0 w-full h-full">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900"></div>
+          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+            <video 
+              ref={videoRef}
+              className="w-full h-full object-cover opacity-40"
+              muted
+              loop
+              playsInline
+              poster="/assets/video-poster.jpg"
+            >
+              <source src="/assets/main.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works Section - Vertical TikTok-style videos */}
+      <div className="py-20 bg-gray-800" id="how-it-works">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <GradientText>How It Works</GradientText>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Getting started with TraceMate is simple.
+            </p>
+          </div>
+          
+          {/* Mobile: Horizontal scrolling container */}
+          <div className="md:hidden relative overflow-x-auto pb-8 -mx-4 px-4">
+            <div className="flex space-x-4">
+              <StepCard number="1" videoThumbnail="/api/placeholder/270/480" />
+              <StepCard number="2" videoThumbnail="/api/placeholder/270/480" />
+              <StepCard number="3" videoThumbnail="/api/placeholder/270/480" />
+            </div>
+            <div className="flex justify-center mt-6 gap-2">
+              {[1, 2, 3].map((_, i) => (
+                <div key={i} className="w-2 h-2 rounded-full bg-gray-600" />
+              ))}
+            </div>
+          </div>
+          
+          {/* Desktop: Centered TikTok videos side by side */}
+          <div className="hidden md:block">
+            <div className="grid grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {[1, 2, 3].map((number) => (
+                <div key={number}>
+                  <div className="w-full relative rounded-xl overflow-hidden">
+                    <div className="aspect-[9/16] bg-gray-700 rounded-xl relative flex items-center justify-center">
+                      <img src="/api/placeholder/360/640" alt={`Video ${number}`} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <PlayCircle 
+                          className="w-16 h-16 text-white opacity-80 hover:opacity-100 cursor-pointer transition-opacity" 
+                          onClick={() => {}}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials Section - With navigation buttons */}
+      <div className="py-20 bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <GradientText>What Our Users Say</GradientText>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Don't just take our word for it. Here's what our users have to say about TraceMate.
+            </p>
+          </div>
+          <TestimonialCarousel testimonials={testimonials} />
+        </div>
+      </div>
+
+      {/* Pricing Section - Side by side on all screen sizes */}
+      <div className="py-20 bg-gray-800" id="pricing">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <GradientText>Simple Pricing</GradientText>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Choose the plan that's right for you. No hidden fees, no surprises.
+            </p>
+          </div>
+          
+          {/* Pricing grid - always side by side */}
+          <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto">
+            <PricingCard 
+              free={true}
+              price="0"
+              title="Free Plan"
+              feature="Limited time in every tracing session"
+            />
+            <PricingCard 
+              price="25"
+              title="Premium Plan"
+              feature="Full tracing capabilities forever, no limits"
+              popular={true}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="py-20 bg-gray-900">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <GradientText>Frequently Asked Questions</GradientText>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Got questions? We've got answers.
+            </p>
+          </div>
+          <div>
+            {faqItems.map((item, index) => (
+              <FAQItem 
+                key={index}
+                question={item.question}
+                answer={item.answer}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="flex items-center mb-6 md:mb-0">
+              <div className="bg-blue-500 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                <span className="text-white font-bold">TM</span>
+              </div>
+              <span className="text-xl font-semibold" style={{
+                fontFamily: 'Poppins', 
+                background: 'linear-gradient(to right, #ffffff, #4a9fff)', 
+                WebkitBackgroundClip: 'text', 
+                WebkitTextFillColor: 'transparent'
+              }}>
+                TraceMate
+              </span>
+            </div>
+            <div className="text-gray-400 text-sm">
+              © {currentYear} TraceMate. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default NewLandingPage;

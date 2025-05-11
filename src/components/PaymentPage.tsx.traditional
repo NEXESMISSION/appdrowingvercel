@@ -1,0 +1,279 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/PaymentPage.css';
+
+// Simple Button component
+interface ButtonProps {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
+
+const Button: React.FC<ButtonProps> = ({ children, className = '', onClick }) => {
+  return (
+    <button 
+      className={`cta-button ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
+// Countdown Timer Component
+const CountdownTimer = () => {
+  // Initialize timer state from localStorage or default values
+  const [time, setTime] = useState(() => {
+    // Try to get saved timer state from localStorage
+    const savedTimer = localStorage.getItem('countdownTimer');
+    if (savedTimer) {
+      try {
+        const parsedTimer = JSON.parse(savedTimer);
+        // Validate the timer data
+        if (parsedTimer && 
+            typeof parsedTimer.hours === 'number' && 
+            typeof parsedTimer.minutes === 'number' && 
+            typeof parsedTimer.seconds === 'number' &&
+            parsedTimer.expireTime) {
+          
+          // Calculate remaining time based on saved expiration time
+          const now = new Date().getTime();
+          const expireTime = parsedTimer.expireTime;
+          const totalSecondsLeft = Math.max(0, Math.floor((expireTime - now) / 1000));
+          
+          if (totalSecondsLeft > 0) {
+            const hours = Math.floor(totalSecondsLeft / 3600);
+            const minutes = Math.floor((totalSecondsLeft % 3600) / 60);
+            const seconds = totalSecondsLeft % 60;
+            return { hours, minutes, seconds, expireTime };
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing saved timer:', error);
+      }
+    }
+    
+    // Default timer values (5 hours)
+    const defaultHours = 5;
+    const defaultMinutes = 0;
+    const defaultSeconds = 0;
+    
+    // Calculate expiration time (current time + timer duration in milliseconds)
+    const now = new Date().getTime();
+    const expireTime = now + (defaultHours * 3600 + defaultMinutes * 60 + defaultSeconds) * 1000;
+    
+    return {
+      hours: defaultHours,
+      minutes: defaultMinutes,
+      seconds: defaultSeconds,
+      expireTime: expireTime
+    };
+  });
+
+  useEffect(() => {
+    // Update timer every second
+    const timer = setInterval(() => {
+      setTime(prevTime => {
+        let { hours, minutes, seconds, expireTime } = prevTime;
+        
+        if (seconds > 0) {
+          seconds--;
+        } else if (minutes > 0) {
+          minutes--;
+          seconds = 59;
+        } else if (hours > 0) {
+          hours--;
+          minutes = 59;
+          seconds = 59;
+        }
+        
+        // Save updated timer to localStorage
+        const updatedTimer = { hours, minutes, seconds, expireTime };
+        localStorage.setItem('countdownTimer', JSON.stringify(updatedTimer));
+        
+        return updatedTimer;
+      });
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="countdown-container">
+      <div className="countdown-header">
+        <span className="countdown-warning-icon">⚠️</span>
+        <p className="countdown-title">Limited Time Offer Ends In:</p>
+      </div>
+      
+      <div className="countdown-timer">
+        <div className="countdown-unit">
+          <div className="countdown-value">
+            {String(time.hours).padStart(2, '0')}
+          </div>
+          <div className="countdown-label">HOURS</div>
+        </div>
+        <div className="countdown-separator">:</div>
+        <div className="countdown-unit">
+          <div className="countdown-value">
+            {String(time.minutes).padStart(2, '0')}
+          </div>
+          <div className="countdown-label">MINUTES</div>
+        </div>
+        <div className="countdown-separator">:</div>
+        <div className="countdown-unit">
+          <div className="countdown-value">
+            {String(time.seconds).padStart(2, '0')}
+          </div>
+          <div className="countdown-label">SECONDS</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const paymentOptions = [
+  { name: 'Visa', logo: '/assets/visa.png' },
+  { name: 'Mastercard', logo: '/assets/mastercard.png' },
+  { name: 'Binance', logo: '/assets/binance.png' },
+  { name: 'Coinbase', logo: '/assets/coinbase.png' },
+  { name: 'Kraken', logo: '/assets/kraken.png' },
+  { name: 'RedotPay', logo: '/assets/redotpay.png' },
+  { name: 'Wise', logo: '/assets/wise.png' },
+  { name: 'Crypto Transfer', logo: '/assets/crypto.png' }
+];
+
+const contactOptions = [
+  { 
+    name: "WhatsApp", 
+    icon: "💬", 
+    cssClass: "whatsapp",
+    link: "https://wa.me/YourWhatsAppNumber"
+  },
+  { 
+    name: "Instagram", 
+    icon: "📸", 
+    cssClass: "instagram",
+    link: "https://instagram.com/YourInstagramProfile"
+  },
+  { 
+    name: "Telegram", 
+    icon: "✈️", 
+    cssClass: "telegram",
+    link: "https://t.me/YourTelegramUsername"
+  }
+];
+
+const PaymentPage: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+  
+  const handleMessageUs = () => {
+    setShowModal(true);
+  };
+  
+  const handleContactOption = (option: string, link: string) => {
+    window.open(link, '_blank');
+    setShowModal(false);
+  };
+
+  return (
+    <div className="payment-page">
+      <div className="logo-container">
+        <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="app-logo" />
+        <span className="logo-text">TraceMate</span>
+      </div>
+      
+      {/* Countdown Timer */}
+      <CountdownTimer />
+      
+      {/* Hero Section */}
+      <div className="hero-container">
+        <span className="flash-sale-badge">FLASH SALE</span>
+        <h1 className="hero-title">💎 Unlock TraceMate Premium 💎</h1>
+        <p className="hero-price">
+          One-time payment of <span className="price-original">$49</span> <span className="price-current">$25</span>
+        </p>
+        <p className="hero-description">Instant lifetime access. No subscription. No hidden fees.</p>
+      </div>
+      
+      {/* Main CTA */}
+      <button 
+        className="cta-button" 
+        onClick={handleMessageUs}
+      >
+        <span>💬</span> Get Started Now
+      </button>
+      
+      <p className="guarantee-text">
+        <span className="guarantee-icon">⏱️</span> Setup in under 15 minutes • 30-day money back guarantee
+      </p>
+      
+      {/* Payment Options */}
+      <div className="payment-options-container">
+        <p className="payment-options-title">We accept all major payment methods:</p>
+        <div className="payment-options-grid">
+          {paymentOptions.map(opt => {
+            return (
+              <div key={opt.name} className="payment-option">
+                <div className={`payment-option-icon-container ${opt.name === 'Wise' ? 'wise' : ''}`}>
+                  <img 
+                    src={opt.logo} 
+                    alt={opt.name} 
+                    className="payment-option-icon" 
+                  />
+                </div>
+                <span className="payment-option-name">{opt.name}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="payment-options-note">
+          Don't see your preferred payment method? <button onClick={handleMessageUs} className="contact-link">Let us know</button> and we'll accommodate.
+        </div>
+      </div>
+      
+      {/* Social Proof */}
+      <div className="social-proof">
+        <p>🔒 Secure Payment • 24/7 Support • 4.9/5 User Rating (1,200+ reviews)</p>
+      </div>
+      
+      {/* Back Button */}
+      <div>
+        <Link to="/" className="back-link">
+          🔙 Back to Home
+        </Link>
+      </div>
+      
+      {/* Contact Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <h3 className="modal-title">Contact Us</h3>
+            <p className="modal-description">Choose your preferred messaging platform:</p>
+            
+            <div className="contact-options-grid">
+              {contactOptions.map((option) => (
+                <button
+                  key={option.name}
+                  onClick={() => handleContactOption(option.name, option.link)}
+                  className={`contact-option-button ${option.cssClass}`}
+                >
+                  <span>{option.icon}</span>
+                  Contact via {option.name}
+                </button>
+              ))}
+            </div>
+            
+            <button 
+              onClick={() => setShowModal(false)}
+              className="modal-cancel-button"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PaymentPage;

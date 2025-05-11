@@ -1,16 +1,30 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import '../styles/UploadPage.css';
+import '../styles/GlobalDarkTheme.css';
+import '../styles/ModernEffects.css';
+import '../styles/Animations.css';
+import '../styles/SessionLimit.css';
+import authService from '../services/authService';
+import sessionLimitService from '../services/sessionLimitService';
+import { useAuth } from '../context/AuthContext';
 
 const UploadPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const [cameraPermission, setCameraPermission] = useState<'granted' | 'denied' | 'pending'>('pending');
   const [isCheckingPermission, setIsCheckingPermission] = useState(true);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  
+  // Get auth state from context
+  const { isLoggedIn, isPremium: isPremiumUser } = useAuth();
 
   // Check camera permission on component mount
   useEffect(() => {
     checkCameraPermission();
   }, []);
+  
+  // Premium status is now managed by AuthContext
 
   const checkCameraPermission = async () => {
     setIsCheckingPermission(true);
@@ -49,19 +63,91 @@ const UploadPage: React.FC = () => {
       // Store the image URL in sessionStorage to access it in the TracingPage
       sessionStorage.setItem('uploadedImage', imageUrl);
       
-      // Navigate to the tracing page
-      navigate('/tracing');
+      // Check if user is premium
+      if (isPremiumUser) {
+        // Premium users can always proceed
+        navigate('/tracing');
+      } else {
+        // For free users, check if they've reached their daily session limit
+        if (sessionLimitService.hasReachedDailyLimitSync()) {
+          // Show session limit reached dialog
+          setShowLoginPrompt(true);
+        } else {
+          // Record this session use and proceed to tracing page
+          sessionLimitService.recordSessionUseSync();
+          navigate('/tracing');
+        }
+      }
     }
+  };
+  
+  // Continue as free user
+  const handleContinueAsFree = () => {
+    setShowLoginPrompt(false);
+    navigate('/tracing');
+  };
+  
+  // Go to login page
+  const handleGoToLogin = () => {
+    navigate('/login');
   };
 
   return (
     <div className="upload-page">
-      <div className="logo-container">
+      <Link to="/" className="logo-container" title="Go to Home Page">
         <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="app-logo" />
         <span className="logo-text">TraceMate</span>
-      </div>
+      </Link>
       
-      {isCheckingPermission ? (
+      {showLoginPrompt ? (
+        <div className="login-prompt">
+          <h2>Get the Most Out of TraceMate</h2>
+          <p>
+            {sessionLimitService.hasReachedDailyLimitSync() ? 
+              `You've reached your daily limit of 5 free sessions. Premium users enjoy unlimited sessions!` : 
+              `Free users have a 1-minute time limit per session and 5 sessions per day. Premium users enjoy unlimited tracing!`
+            }
+          </p>
+          
+          <div className="account-options">
+            <div className="account-option">
+              <h3>Continue as Free User</h3>
+              <ul>
+                <li>1-minute session limit</li>
+                <li>5 sessions per day</li>
+                <li>Basic features</li>
+              </ul>
+              {sessionLimitService.hasReachedDailyLimitSync() ? (
+                <div className="limit-reached">
+                  <span className="limit-icon">⚠️</span>
+                  <span>Daily limit reached</span>
+                  <div className="sessions-info">
+                    {sessionLimitService.getSessionsUsedTodaySync()}/5 sessions used today
+                  </div>
+                </div>
+              ) : (
+                <button className="free-button" onClick={handleContinueAsFree}>
+                  Continue Free
+                  <div className="sessions-left">
+                    {sessionLimitService.getRemainingSessionsTodaySync()} sessions left today
+                  </div>
+                </button>
+              )}
+            </div>
+            
+            <div className="account-option premium">
+              <div className="popular-tag">Recommended</div>
+              <h3>Get Premium</h3>
+              <ul>
+                <li>Unlimited session time</li>
+                <li>Unlimited daily sessions</li>
+                <li>All premium features</li>
+              </ul>
+              <button className="premium-button" onClick={handleGoToLogin}>Login or Subscribe</button>
+            </div>
+          </div>
+        </div>
+      ) : isCheckingPermission ? (
         <div className="loading-message">
           <p>🔍 Checking camera access...</p>
         </div>
@@ -78,9 +164,55 @@ const UploadPage: React.FC = () => {
             </ol>
           </div>
           
+          {/* Upload button positioned directly under the instructions */}
           <button className="upload-button" onClick={handleUploadClick}>
             📷 Upload Image
           </button>
+          
+          {isPremiumUser ? (
+            <div className="premium-badge">
+              <span className="premium-icon">⭐</span> Welcome Premium User! Enjoy Unlimited Sessions
+            </div>
+          ) : authService.isLoggedInSync() ? (
+            <div className="user-status-container">
+              <div className="logged-in-badge">
+                <div className="logged-in-badge-icon">👤</div>
+                <div className="logged-in-badge-text">
+                  <span className="logged-in-badge-label">LOGGED IN</span>
+                  <span className="logged-in-badge-message">Welcome back!</span>
+                </div>
+              </div>
+              <div className="auth-options">
+                <Link to="/payment" className="upgrade-button">
+                  <span className="upgrade-icon">⭐</span>
+                  <span>Upgrade to Premium</span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="user-status-container">
+              <div className="free-badge">
+                <div className="free-badge-icon">⏱️</div>
+                <div className="free-badge-text">
+                  <span className="free-badge-label">FREE USER</span>
+                  <span className="free-badge-limit">1 Minute Session Limit</span>
+                </div>
+              </div>
+              
+              <div className="auth-options">
+                <Link to="/payment" className="upgrade-button">
+                  <span className="upgrade-icon">⭐</span>
+                  <span>Upgrade</span>
+                </Link>
+                <div className="or-separator">or</div>
+                <Link to={isLoggedIn ? "/app" : "/login"} className="signin-button">
+                  <span className="signin-icon">👤</span>
+                  <span>{isLoggedIn ? "Go to App" : "Sign In"}</span>
+                </Link>
+              </div>
+            </div>
+          )}
+          
           <input
             type="file"
             ref={fileInputRef}

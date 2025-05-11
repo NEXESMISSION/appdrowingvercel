@@ -1,0 +1,62 @@
+/* Dark theme fix for TraceMate landing page */
+html, body, #root, .app, div[class^='App_'], div[class^='Landing_'] {
+  background-color: #111827 !important;
+  color: #fff !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+
+.landing-page {
+  background-color: #111827 !important;
+  color: #fff !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.hero-section,
+.how-it-works-section,
+.before-after-section,
+.pricing-section,
+.testimonials-section,
+.faq-section,
+.footer {
+  background-color: #111827 !important;
+  width: 100% !important;
+}
+
+/* Fix video styling */
+.hero-video {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.step-video {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 8px !important;
+}
+
+/* Fix mobile layout for before/after section */
+@media (max-width: 767px) {
+  .before-after-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .before-after-image {
+    height: auto !important;
+  }
+  
+  .how-it-works-video {
+    height: 280px !important;
+  }
+}

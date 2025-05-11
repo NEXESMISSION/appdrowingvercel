@@ -1,0 +1,55 @@
+/* Root-level dark theme that loads before any other styles */
+:root {
+  --dark-bg: #111827;
+  --dark-card-bg: #1f2937;
+  --text-light: #ffffff;
+}
+
+html {
+  background-color: var(--dark-bg) !important;
+}
+
+body {
+  background-color: var(--dark-bg) !important;
+  color: var(--text-light) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#root {
+  background-color: var(--dark-bg) !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+}
+
+/* Force dark background on all major containers */
+.app, 
+.landing-page, 
+.upload-page, 
+.tracing-page, 
+.payment-page, 
+.login-page {
+  background-color: var(--dark-bg) !important;
+  color: var(--text-light) !important;
+}
+
+/* Force dark background on all sections */
+section, 
+header, 
+footer, 
+main, 
+div[class*="container"], 
+div[class*="section"], 
+div[class*="wrapper"],
+div[class*="content"] {
+  background-color: var(--dark-bg) !important;
+}
+
+/* Only allow transparent backgrounds for specific elements */
+.video-container,
+.hero-video-container,
+.hero-overlay,
+.gradient-overlay,
+.particle-container {
+  background-color: transparent !important;
+}

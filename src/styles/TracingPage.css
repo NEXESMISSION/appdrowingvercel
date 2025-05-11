@@ -1,0 +1,56 @@
+/* Styles for the TracingPage component */
+
+/* Logo container styles */
+.tracing-logo-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.tracing-logo-container:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: translateY(-2px);
+}
+
+.tracing-app-logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+}
+
+.tracing-logo-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #ffffff, #4a9fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 600px) {
+  .tracing-logo-container {
+    top: 10px;
+    left: 10px;
+    padding: 6px 10px;
+  }
+  
+  .tracing-app-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+  }
+  
+  .tracing-logo-text {
+    font-size: 1rem;
+  }
+}

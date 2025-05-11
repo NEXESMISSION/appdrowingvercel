@@ -1,0 +1,96 @@
+/* Force Dark Theme - Highest priority overrides */
+
+/* Target all root elements with !important */
+html, 
+body, 
+#root,
+#root > div,
+.app,
+.landing-page,
+.payment-page,
+.login-page,
+.app-page,
+.upload-page,
+.tracing-page {
+  background-color: #111827 !important;
+  color: #fff !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Force dark theme on all sections */
+.hero-section,
+.how-it-works-section,
+.before-after-section,
+.pricing-section,
+.testimonials-section,
+.faq-section,
+.footer {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+
+/* Force dark background on containers */
+.hero-container,
+.how-it-works-container,
+.before-after-container,
+.pricing-container,
+.testimonials-container,
+.faq-container,
+.footer-container,
+.header-container,
+.logo-container,
+.nav-container,
+.steps-grid,
+.step-item,
+.pricing-grid,
+.pricing-card,
+.testimonial-carousel,
+.testimonial-slider,
+.testimonial-slide,
+.testimonial-card,
+.faq-item {
+  background-color: #111827 !important;
+}
+
+/* Fix video containers */
+.video-container,
+.hero-video-container,
+.how-it-works-video {
+  background-color: transparent !important;
+}
+
+/* Ensure text is visible */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button {
+  color: #fff !important;
+}
+
+/* Only allow gradient text where needed */
+.gradient-text-primary,
+.gradient-text-accent,
+.hero-title,
+.section-title,
+.logo-text {
+  color: transparent !important;
+}
+
+/* Fix mobile layout for before/after section */
+@media (max-width: 767px) {
+  .before-after-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .before-after-image {
+    height: auto !important;
+    max-height: 200px !important;
+    object-fit: cover !important;
+  }
+  
+  .how-it-works-video {
+    height: 280px !important;
+  }
+}

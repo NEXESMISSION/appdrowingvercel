@@ -1,0 +1,63 @@
+/* Global Dark Theme for TraceMate */
+
+/* Force dark theme on all root elements */
+html, 
+body, 
+#root,
+#root > div,
+.App {
+  background-color: #111827 !important;
+  color: #fff !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Force dark theme on all main sections */
+.landing-page,
+.payment-page,
+.login-page,
+.app-page,
+.upload-page,
+.tracing-page,
+.hero-section,
+.how-it-works-section,
+.before-after-section,
+.pricing-section,
+.testimonials-section,
+.faq-section,
+.footer,
+.payment-container,
+.payment-form,
+.payment-success,
+.payment-error {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+
+/* Fix video containers */
+.video-container,
+.hero-video-container,
+.how-it-works-video {
+  background-color: transparent !important;
+}
+
+/* Fix mobile layout for before/after section */
+@media (max-width: 767px) {
+  .before-after-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .before-after-image {
+    height: auto !important;
+    max-height: 200px !important;
+    object-fit: cover !important;
+  }
+  
+  .how-it-works-video {
+    height: 280px !important;
+  }
+}

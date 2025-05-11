@@ -1,0 +1,56 @@
+/* 
+ * Video Poster Placeholders
+ * This CSS provides placeholder backgrounds for videos until they load
+ * Using base64 encoded image placeholders for better compatibility
+ */
+
+/* Common base64 encoded placeholder for all videos */
+.video-placeholder {
+  background-color: #121212;
+  position: relative;
+}
+
+/* Base64 encoded minimal placeholder image (1x1 pixel transparent PNG) */
+video[data-video-id="hero"],
+video[data-video-id="setup"],
+video[data-video-id="tracing"],
+video[data-video-id="adjusting"] {
+  background: #121212 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+  background-size: cover;
+}
+
+/* Poster gradient for placeholders */
+.poster-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #121212, #1e1e1e, #2a2a2a);
+  z-index: 1;
+}
+
+/* Loading spinner for videos */
+.video-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #4a9fff;
+  animation: spin 1s ease-in-out infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-wrapper.loading::after {
+  opacity: 1;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

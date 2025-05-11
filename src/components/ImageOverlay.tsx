@@ -9,7 +9,6 @@ interface ImageOverlayProps {
 const ImageOverlay: React.FC<ImageOverlayProps> = ({ imageUrl, settings }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const { opacity, scale, positionX, positionY, rotation, tiltX, tiltY } = settings;
-  const [showHint, setShowHint] = useState(true);
 
   const overlayStyle: React.CSSProperties = {
     opacity,
@@ -23,8 +22,6 @@ const ImageOverlay: React.FC<ImageOverlayProps> = ({ imageUrl, settings }) => {
     touchAction: 'none', // Prevents browser handling of touch events
   };
 
-  // Control points rendering has been removed as requested
-
   return (
     <div className="overlay-container" ref={overlayRef}>
       <img
@@ -34,18 +31,6 @@ const ImageOverlay: React.FC<ImageOverlayProps> = ({ imageUrl, settings }) => {
         style={overlayStyle}
         draggable="false" // Prevents default drag behavior
       />
-      {showHint && (
-        <div className="overlay-hint">
-          <span>Drag to move • Pinch to zoom • Rotate with two fingers</span>
-          <button 
-            className="hint-close-button" 
-            onClick={() => setShowHint(false)}
-            aria-label="Close hint"
-          >
-            ×
-          </button>
-        </div>
-      )}
     </div>
   );
 };

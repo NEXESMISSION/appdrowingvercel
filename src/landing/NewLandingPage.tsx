@@ -1,0 +1,536 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import './NewLandingPage.css';
+import '../styles/ModernEffects.css';
+import '../styles/Animations.css';
+import '../styles/VideoPosterPlaceholders.css';
+import '../styles/GlobalDarkTheme.css';
+import '../styles/ForceDarkTheme.css';
+
+const NewLandingPage: React.FC = () => {
+  // State management
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [userCount, setUserCount] = useState<number>(1593);
+  const particlesRef = useRef<HTMLDivElement>(null);
+  
+  // Create particle effect
+  useEffect(() => {
+    if (particlesRef.current) {
+      const container = particlesRef.current;
+      const containerWidth = container.offsetWidth;
+      const containerHeight = container.offsetHeight;
+      
+      // Clear existing particles
+      container.innerHTML = '';
+      
+      // Create particles
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random position
+        particle.style.left = `${Math.random() * containerWidth}px`;
+        particle.style.top = `${Math.random() * containerHeight}px`;
+        
+        // Random size
+        const size = Math.random() * 6 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random opacity
+        particle.style.opacity = `${Math.random() * 0.5 + 0.3}`;
+        
+        // Random color
+        const colors = ['rgba(255, 95, 109, 0.7)', 'rgba(255, 153, 102, 0.7)', 'rgba(74, 159, 255, 0.7)'];
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Random animation duration
+        const duration = Math.random() * 20 + 10;
+        particle.style.animation = `float-particle ${duration}s infinite linear`;
+        
+        // Random animation delay
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(particle);
+      }
+    }
+  }, []);
+
+  // Refs
+  const headerRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Example testimonial data
+  const testimonials = [
+    { 
+      text: "TraceMate has completely transformed my drawing skills! I can now trace any image with precision and confidence.",
+      name: "Sarah Johnson",
+      role: "Hobby Artist" 
+    },
+    { 
+      text: "As an art teacher, I recommend TraceMate to all my students. It's the perfect tool for beginners to develop proper technique.",
+      name: "Michael Chen",
+      role: "Art Instructor" 
+    },
+    { 
+      text: "Worth every penny! I went from barely drawing stick figures to creating detailed portraits in just a few weeks.",
+      name: "Alex Rodriguez",
+      role: "Beginner Artist" 
+    }
+  ];
+
+  // Example FAQ data
+  const faqItems = [
+    { 
+      question: "What is TraceMate?", 
+      answer: "TraceMate is an innovative tracing app that helps you trace images through your camera. It overlays your reference image on your camera feed, allowing you to trace directly onto paper with perfect accuracy." 
+    },
+    { 
+      question: "How much does TraceMate cost?", 
+      answer: "TraceMate offers a free plan with a 1-minute session limit and a premium plan for $25 (one-time payment) that unlocks unlimited tracing time forever." 
+    },
+    { 
+      question: "Do you offer refunds?", 
+      answer: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with TraceMate Premium, we'll issue a full refund." 
+    },
+    { 
+      question: "How do I get started?", 
+      answer: "You can start using TraceMate today by clicking the 'Try It Now' button. Simply upload an image you want to trace, position it over your camera feed, and start tracing!" 
+    },
+  ];
+
+  // Toggle FAQ item
+  const toggleFAQ = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  // Handle scroll events for header
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Increment user count daily
+  useEffect(() => {
+    // Check if we need to update the count today
+    const today = new Date().toDateString();
+    const lastUpdated = localStorage.getItem('lastCountUpdate');
+    
+    if (lastUpdated !== today) {
+      // Generate a random increase between 5 and 15
+      const increase = Math.floor(Math.random() * 11) + 5;
+      const newCount = userCount + increase;
+      
+      setUserCount(newCount);
+      localStorage.setItem('userCount', newCount.toString());
+      localStorage.setItem('lastCountUpdate', today);
+    } else {
+      // Get stored count if available
+      const storedCount = localStorage.getItem('userCount');
+      if (storedCount) {
+        setUserCount(parseInt(storedCount, 10));
+      }
+    }
+  }, [userCount]);
+
+  // Handle testimonial navigation
+  const nextTestimonial = () => {
+    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // Get current year for footer
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <div className="landing-page particle-background" ref={particlesRef}>
+      {/* Header with logo and sign-in button */}
+      <header 
+        ref={headerRef}
+        className={`header ${isScrolled ? 'scrolled' : ''}`}
+      >
+        <div className="header-container">
+          <div className="logo-container">
+            <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="logo-image" />
+            <span className="logo-text">TraceMate</span>
+          </div>
+          <div className="nav-container">
+            <nav className="nav-links">
+              <a href="#how-it-works" className="nav-link">How It Works</a>
+              <a href="#see-it-in-action" className="nav-link">See It In Action</a>
+              <a href="#pricing" className="nav-link">Pricing</a>
+            </nav>
+            <Link to="/login" className="sign-in-button">
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-container">
+          <div className="hero-video-container">
+            <video 
+              ref={videoRef}
+              className="hero-video"
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+              poster="/assets/video-poster-1.jpg"
+            >
+              <source src="/assets/main.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div className="video-overlay"></div>
+          </div>
+          
+          <div className="hero-content">
+            <div className="hero-logo floating">
+              <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="hero-logo-image glow-effect" />
+            </div>
+            <h1 className="hero-title">
+              Transform Your Phone Into a Magical Tracing Tool!
+            </h1>
+            <p className="hero-subtitle">
+              Makes drawing easy and fun! Perfect for beginners and pros alike.
+            </p>
+            <Link to="/app" className="hero-button shine-effect">
+              Try It Now
+            </Link>
+            <p className="user-count">✨ Join {userCount.toLocaleString()}+ Happy Artists!</p>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="how-it-works-section" id="how-it-works">
+        <div className="how-it-works-container">
+          <div className="section-header">
+            <h2 className="section-title neon-text-blue">How It Works</h2>
+            <p className="section-subtitle">
+              It's that easy! Just three simple steps to get started.
+            </p>
+          </div>
+          
+          <div className="steps-grid">
+            <div className="step-item">
+              <div className="how-it-works-video">
+                <video 
+                  className="step-video"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                  poster="/assets/video-poster-2.jpg"
+                >
+                  <source src="/assets/vd/video1.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="step-content">
+                <h3 className="step-title">Setup & Image Choice</h3>
+                <p className="step-description">
+                  Upload your image or choose from our library.
+                </p>
+              </div>
+            </div>
+            
+            <div className="step-item">
+              <div className="how-it-works-video">
+                <video 
+                  className="step-video"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                  poster="/assets/video-poster-3.jpg"
+                >
+                  <source src="/assets/vd/video2.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="step-content">
+                <h3 className="step-title">The Tracing Experience</h3>
+                <p className="step-description">
+                  See your image overlaid on your camera feed. Start tracing!
+                </p>
+              </div>
+            </div>
+            
+            <div className="step-item">
+              <div className="how-it-works-video">
+                <video 
+                  className="step-video"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                  poster="/assets/video-poster-4.jpg"
+                >
+                  <source src="/assets/vd/video3.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="step-content">
+                <h3 className="step-title">Adjusting & Fine-tuning</h3>
+                <p className="step-description">
+                  Adjust opacity, size, and position for perfect results.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Before/After Section */}
+      <section className="before-after-section" id="see-it-in-action">
+        <div className="before-after-container">
+          <div className="section-header">
+            <h2 className="section-title neon-text">See It In Action!</h2>
+            <p className="section-subtitle">
+              From "Oops" to "Ooh La La!" – The TraceMate Difference is Clear!
+            </p>
+          </div>
+          
+          <div className="before-after-grid">
+            <div className="before-after-item">
+              <img src="/assets/befor.png" alt="Before drawing example" className="before-after-image" />
+              <div className="before-after-label">Without TraceMate</div>
+            </div>
+            
+            <div className="before-after-item">
+              <img src="/assets/after.png" alt="After drawing example" className="before-after-image" />
+              <div className="before-after-label">With TraceMate</div>
+            </div>
+          </div>
+          
+          <p className="before-after-message">
+            You don't need years of practice. You just need the right tool. TraceMate guides your hand, building your skills and confidence with every line!
+          </p>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="pricing-section" id="pricing">
+        <div className="pricing-container">
+          <div className="section-header">
+            <h2 className="section-title gradient-text-accent typing-animation">Unlock Your Artistic Potential</h2>
+            <p className="section-subtitle">
+              🔥 Special Launch Pricing - Limited Time Only! 🔥
+            </p>
+          </div>
+          
+          {/* Pricing grid */}
+          <div className="pricing-grid">
+            {/* Free Plan */}
+            <div className="pricing-card modern-card">
+              <div className="pricing-header">
+                <h3 className="pricing-title">Free</h3>
+                <div className="pricing-price">
+                  <span className="pricing-currency">$</span>
+                  <span className="pricing-amount">0</span>
+                </div>
+                <p className="pricing-period">forever</p>
+              </div>
+              <div className="pricing-feature">
+                <div className="feature-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <p className="feature-text">Basic tracing tools</p>
+                <div className="pricing-feature">
+                  <div className="feature-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <p className="feature-text">1-minute session limit</p>
+                </div>
+              </div>
+              <div className="pricing-actions">
+                <Link to="/app" className="pricing-button primary">
+                  Start Free
+                </Link>
+              </div>
+            </div>
+            
+            {/* Premium Plan */}
+            <div className="pricing-card popular modern-card glow-effect">
+              <div className="popular-badge">Most Popular</div>
+              <div className="pricing-header">
+                <h3 className="pricing-title">Lifetime</h3>
+                <div className="pricing-price">
+                  <span className="pricing-original">$45</span>
+                  <span className="pricing-currency">$</span>
+                  <span className="pricing-amount">7.5</span>
+                </div>
+                <p className="pricing-period">one-time payment</p>
+              </div>
+              <div className="pricing-feature">
+                <div className="feature-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <p className="feature-text">Unlimited tracing time forever</p>
+                <div className="pricing-feature">
+                  <div className="feature-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <p className="feature-text">All future updates</p>
+                </div>
+                <div className="pricing-feature">
+                  <div className="feature-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <p className="feature-text">No watermarks</p>
+                </div>
+              </div>
+              <div className="pricing-actions">
+                <Link to="/payment" className="pricing-button primary">
+                  Get Lifetime
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Testimonials Section */}
+      <section className="testimonials-section">
+        <div className="testimonials-container">
+          <div className="section-header">
+            <h2 className="section-title">What Our Users Say</h2>
+            <p className="section-subtitle">
+              Don't just take our word for it. Here's what our users have to say about TraceMate.
+            </p>
+          </div>
+          <div className="testimonial-carousel">
+            <div className="testimonial-slider">
+              <div className="testimonial-slide">
+                <div className="testimonial-card">
+                  <p className="testimonial-text">{testimonials[activeTestimonial].text}</p>
+                  <div>
+                    <p className="testimonial-author">{testimonials[activeTestimonial].name}</p>
+                    <p className="testimonial-role">{testimonials[activeTestimonial].role}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="testimonial-controls">
+              <button 
+                className="testimonial-button"
+                onClick={prevTestimonial}
+                aria-label="Previous testimonial"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              
+              <div className="testimonial-dots">
+                {testimonials.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`testimonial-dot ${i === activeTestimonial ? 'active' : ''}`}
+                    onClick={() => setActiveTestimonial(i)}
+                    aria-label={`Go to testimonial ${i + 1}`}
+                  />
+                ))}
+              </div>
+              
+              <button 
+                className="testimonial-button"
+                onClick={nextTestimonial}
+                aria-label="Next testimonial"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="faq-section">
+        <div className="faq-container">
+          <div className="section-header">
+            <h2 className="section-title">Frequently Asked Questions</h2>
+            <p className="section-subtitle">
+              Got questions? We've got answers.
+            </p>
+          </div>
+          <div>
+            {faqItems.map((item, index) => (
+              <div key={index} className="faq-item">
+                <button 
+                  className="faq-question"
+                  onClick={() => toggleFAQ(index)}
+                >
+                  <span>{item.question}</span>
+                  <div className="faq-icon">
+                    {activeFaq === index ? (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    ) : (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    )}
+                  </div>
+                </button>
+                <div className={`faq-answer ${activeFaq === index ? 'active' : ''}`}>
+                  {item.answer}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-container">
+          <div className="footer-content">
+            <div className="footer-logo">
+              <img src="/assets/logo-dark-bg.png" alt="TraceMate" className="footer-logo-image" />
+              <span className="footer-logo-text">TraceMate</span>
+            </div>
+            <div className="footer-copyright">
+              © {currentYear} TraceMate. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default NewLandingPage;

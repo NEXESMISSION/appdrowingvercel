@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceMate - Image Tracing App</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Outfit', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #111827;
+      color: #fff;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header styles */
+    header {
+      padding: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    
+    .logo-text {
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #ffffff, #4a9fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    
+    /* Hero section */
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-video-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(17, 24, 39, 0.7);
+      z-index: 2;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 600px;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #e2e8f0;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #4a9fff, #3a8fee);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* How it works section */
+    .how-it-works {
+      padding: 100px 0;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff, #4a9fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      display: inline-block;
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 50px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #e2e8f0;
+    }
+    
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    
+    .step-item {
+      background-color: #1f2937;
+      border-radius: 10px;
+      padding: 30px;
+      transition: transform 0.3s ease;
+    }
+    
+    .step-item:hover {
+      transform: translateY(-10px);
+    }
+    
+    .step-item h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #4a9fff;
+    }
+    
+    .step-video-container {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
+    .step-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* User count */
+    .user-count {
+      text-align: center;
+      padding: 50px 0;
+      background-color: #1f2937;
+      margin: 50px 0;
+      border-radius: 10px;
+    }
+    
+    .user-count h3 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    
+    .count-number {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #4a9fff;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="/assets/logo-dark-bg.png" alt="TraceMate Logo">
+        <span class="logo-text">TraceMate</span>
+      </div>
+      <a href="/login" class="cta-button">Sign In</a>
+    </header>
+    
+    <section class="hero">
+      <div class="hero-video-container">
+        <video class="hero-video" autoplay loop muted playsinline>
+          <source src="/assets/main.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-overlay"></div>
+      
+      <div class="hero-content">
+        <h1>Transform Your Drawing Skills with TraceMate</h1>
+        <p>The perfect tool for tracing images through your camera. Upload any image and trace it with precision using our innovative overlay technology.</p>
+        <a href="/app" class="cta-button">Try It Now</a>
+      </div>
+    </section>
+    
+    <section class="how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">TraceMate makes tracing simple with just three easy steps</p>
+      
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-video-container">
+            <video class="step-video" autoplay loop muted playsinline>
+              <source src="/assets/vd/video1.mp4" type="video/mp4">
+            </video>
+          </div>
+          <h3>1. Upload Your Image</h3>
+          <p>Select any image you want to trace from your device. Our system will process it for optimal tracing.</p>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-video-container">
+            <video class="step-video" autoplay loop muted playsinline>
+              <source src="/assets/vd/video2.mp4" type="video/mp4">
+            </video>
+          </div>
+          <h3>2. Position Your Camera</h3>
+          <p>Point your camera at your drawing surface. Adjust the transparency and position of your reference image.</p>
+        </div>
+        
+        <div class="step-item">
+          <div class="step-video-container">
+            <video class="step-video" autoplay loop muted playsinline>
+              <source src="/assets/vd/video3.mp4" type="video/mp4">
+            </video>
+          </div>
+          <h3>3. Trace with Precision</h3>
+          <p>Follow the overlay to create a perfect trace of your image. Save your work when you're finished.</p>
+        </div>
+      </div>
+      
+      <div class="user-count">
+        <h3>Join our growing community of artists</h3>
+        <div class="count-number">1,593+</div>
+        <p>users already improving their drawing skills with TraceMate</p>
+      </div>
+    </section>
+  </div>
+  
+  <script>
+    // Video handling script
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to handle videos
+      function setupVideos() {
+        // Hero video
+        const heroVideo = document.querySelector('.hero-video');
+        if (heroVideo) {
+          heroVideo.src = '/assets/main.mp4';
+          heroVideo.load();
+          
+          // Try to play with error handling
+          const playPromise = heroVideo.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(function(error) {
+              console.log('Auto-play prevented for hero video:', error);
+              
+              // Try again when user interacts with the page
+              document.addEventListener('click', function() {
+                heroVideo.play().catch(function(e) {
+                  console.log('Still cannot play hero video:', e);
+                });
+              }, { once: true });
+            });
+          }
+        }
+        
+        // Step videos
+        const stepVideos = document.querySelectorAll('.step-video');
+        stepVideos.forEach(function(video, index) {
+          const videoNum = (index % 3) + 1;
+          video.src = '/assets/vd/video' + videoNum + '.mp4';
+          video.load();
+          
+          // Try to play with error handling
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(function(error) {
+              console.log('Auto-play prevented for step video:', error);
+            });
+          }
+        });
+      }
+      
+      // Initial setup
+      setupVideos();
+      
+      // Also try again after a short delay
+      setTimeout(setupVideos, 1000);
+    });
+  </script>
+</body>
+</html>

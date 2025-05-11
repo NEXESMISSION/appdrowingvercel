@@ -1,0 +1,550 @@
+.upload-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background-color: #121212;
+  color: white;
+}
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #121212;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(255, 255, 255, 0.05) inset;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Removed header-container as we're not using it anymore */
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  /* Removed any background styling to ensure consistent dark background */
+}
+
+.app-logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #ffffff, #4a9fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-options {
+  display: flex;
+  width: 100%;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.or-separator {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0 0.3rem;
+}
+
+@media (max-width: 600px) {
+  .user-status-container {
+    padding: 0 1.5rem;
+  }
+  
+  .auth-options {
+    flex-direction: column;
+    padding: 0 1.5rem;
+  }
+  
+  .or-separator {
+    margin: 0.5rem 0;
+    position: relative;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .or-separator::before,
+  .or-separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 20px);
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .or-separator::before {
+    left: 0;
+  }
+  
+  .or-separator::after {
+    right: 0;
+  }
+}
+
+.signin-button, .upgrade-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  flex: 1;
+  text-align: center;
+}
+
+.upgrade-button {
+  background-color: #4a9fff;
+  color: white;
+  box-shadow: 0 4px 8px rgba(74, 159, 255, 0.3);
+}
+
+.upgrade-button:hover {
+  background-color: #3a8fee;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(74, 159, 255, 0.4);
+}
+
+.signin-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.signin-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.signin-icon, .upgrade-icon {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .signin-button, .upgrade-button {
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .free-badge {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.instructions {
+  max-width: 600px;
+  margin: 0 2rem 2rem 2rem; /* Added horizontal margins */
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem; /* Increased padding */
+  border-radius: 8px;
+}
+
+.instructions h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #4a9fff;
+}
+
+.instructions ol {
+  padding-left: 1.5rem;
+}
+
+.instructions li {
+  margin-bottom: 0.75rem;
+}
+
+.upload-button {
+  background-color: #4a9fff;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  margin: 0 auto 2rem auto; /* Center the button and increase bottom margin */
+  display: block; /* Make it a block element for better positioning */
+  width: fit-content; /* Make width fit the content */
+}
+
+.upload-button:hover {
+  background-color: #3a8fee;
+  transform: translateY(-2px);
+}
+
+.file-input {
+  display: none;
+}
+
+.camera-permission {
+  max-width: 500px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.permission-icon {
+  margin-bottom: 1rem;
+  color: #4a9fff;
+}
+
+.camera-permission h2 {
+  margin-top: 0;
+  color: #4a9fff;
+}
+
+.permission-button {
+  background-color: #4a9fff;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  margin-top: 1rem;
+}
+
+.permission-button:hover {
+  background-color: #3a8fee;
+  transform: translateY(-2px);
+}
+
+.loading-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.credit-line {
+  margin-top: auto;
+  padding-top: 2rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Premium and Free badges */
+.premium-badge, .free-badge {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.premium-badge {
+  background-color: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  color: #ffd700;
+}
+
+.user-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.free-badge {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ff5f6d, #ff9966);
+  color: #ffffff;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(255, 95, 109, 0.3);
+  margin-bottom: 1rem;
+  animation: pulse-shadow 2s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-shadow {
+  0% { box-shadow: 0 4px 15px rgba(255, 95, 109, 0.3); }
+  50% { box-shadow: 0 4px 20px rgba(255, 95, 109, 0.5); }
+  100% { box-shadow: 0 4px 15px rgba(255, 95, 109, 0.3); }
+}
+
+.free-badge-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.free-badge-info {
+  display: flex;
+  align-items: center;
+}
+
+.free-badge-text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5rem;
+}
+
+.free-badge-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  opacity: 0.9;
+}
+
+.free-badge-limit {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+
+.premium-icon {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.free-icon {
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.upgrade-button {
+  background: linear-gradient(135deg, #ff9966, #ff5f6d);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  box-shadow: 0 4px 10px rgba(255, 95, 109, 0.3);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.upgrade-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+  z-index: -1;
+  transition: all 0.6s ease;
+  opacity: 0;
+}
+
+.upgrade-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 95, 109, 0.5);
+}
+
+.upgrade-button:hover::before {
+  opacity: 1;
+  left: -100%;
+  top: -100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: rotate(45deg) translateX(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateX(100%);
+  }
+}
+
+/* Removed upgrade-link styles as we're using upgrade-button instead */
+
+/* Login prompt */
+.login-prompt {
+  max-width: 800px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.login-prompt h2 {
+  margin-top: 0;
+  color: #4a9fff;
+  margin-bottom: 0.5rem;
+}
+
+.login-prompt p {
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.account-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.account-option {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.account-option.premium {
+  border: 1px solid #4a9fff;
+}
+
+.popular-tag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4a9fff;
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.account-option h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.account-option ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.account-option li {
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.account-option li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #4a9fff;
+}
+
+.free-button, .premium-button {
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  border: none;
+}
+
+.free-button {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.free-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.premium-button {
+  background-color: #4a9fff;
+  color: white;
+}
+
+.premium-button:hover {
+  background-color: #3a8fee;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .account-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .login-prompt, .camera-permission, .instructions {
+    padding: 1.2rem;
+  }
+  
+  .upload-button, .permission-button, .free-button, .premium-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .premium-badge, .free-badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.8rem;
+  }
+  
+  .app-logo {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .logo-text {
+    font-size: 1.3rem;
+  }
+}

@@ -5,208 +5,36 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="TraceMate - An image tracing application"
-    />
+    <meta name="description" content="TraceMate - An image tracing application" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>TraceMate</title>
-    <!-- Mobile video optimization styles -->
-    <link rel="stylesheet" href="/mobile-video.css">
-    <link rel="stylesheet" href="/video-optimization.css">
-    <link rel="stylesheet" href="/action-videos.css">
+    
+    <!-- Basic dark theme -->
+    <style>
+      html, body, #root {
+        background-color: #111827;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>You need to enable JavaScript to run this app. <a href="/static-landing.html">View static version</a></noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-    <!-- Optimized video loading script -->
+    
+    <!-- Fallback script if React fails to load -->
     <script>
-      // This script runs as soon as the page starts loading
-      document.addEventListener('DOMContentLoaded', function() {
-        // Function to optimize all videos with immediate display
-        function optimizeVideos() {
-          // Get all video elements
-          const videos = document.querySelectorAll('video');
-          
-          videos.forEach(function(video) {
-            // Different handling based on video type
-            const isHeroVideo = video.closest('.hero') || video.classList.contains('hero-video');
-            const isActionVideo = video.closest('.video-item') || video.classList.contains('tall-video');
-            
-            // Remove all existing sources
-            while (video.firstChild) {
-              video.removeChild(video.firstChild);
-            }
-            
-            // Create new source element with appropriate video
-            const source = document.createElement('source');
-            
-            if (isHeroVideo) {
-              // For hero video
-              source.src = '/assets/main.mp4';
-              
-              // Create a background container with the same image as video content
-              const container = video.closest('.video-container');
-              if (container) {
-                // Set the container background to match video content
-                container.style.backgroundColor = 'rgba(0,0,0,0.2)';
-              }
-              
-              // Advanced mobile centering technique with transparent background
-              video.style.objectFit = 'cover';
-              video.style.width = 'auto';
-              video.style.height = 'auto';
-              video.style.minWidth = '100%';
-              video.style.minHeight = '100%';
-              video.style.position = 'absolute';
-              video.style.top = '50%';
-              video.style.left = '50%';
-              video.style.transform = 'translate(-50%, -50%)';
-              video.style.objectPosition = 'center center';
-              video.style.background = 'transparent';
-              video.style.backgroundColor = 'transparent';
-            } else if (isActionVideo) {
-              // For action videos, use the correct source based on the original
-              const originalSrc = video.querySelector('source');
-              if (originalSrc && originalSrc.src) {
-                // Extract the file name from the original source
-                const fileName = originalSrc.src.split('/').pop();
-                source.src = '/assets/' + fileName;
-              } else {
-                // Fallback if we can't determine the original source
-                const videoIndex = Array.from(video.closest('.video-carousel').querySelectorAll('.video-item')).indexOf(video.closest('.video-item'));
-                source.src = `/assets/${videoIndex + 1}.mp4`;
-              }
-              
-              // Style for action videos
-              video.style.objectFit = 'cover';
-              video.style.width = '100%';
-              video.style.height = 'auto';
-              video.style.background = 'transparent';
-            }
-            
-            source.type = 'video/mp4';
-            
-            // Set common attributes for all videos
-            video.removeAttribute('poster'); // Remove poster to prevent flashing
-            video.setAttribute('playsinline', ''); // Critical for iOS
-            video.setAttribute('webkit-playsinline', ''); // For older iOS
-            video.setAttribute('muted', '');
-            video.setAttribute('autoplay', '');
-            video.setAttribute('loop', '');
-            video.setAttribute('preload', 'auto'); // Preload the video
-            
-            // Add the new source to the video
-            video.appendChild(source);
-            
-            // Handle errors gracefully
-            video.addEventListener('error', function() {
-              // If video fails, show a background color instead
-              video.style.display = 'none';
-              const container = video.closest('.video-container') || video.closest('.video-item');
-              if (container) {
-                container.style.backgroundColor = '#1a1a2e';
-              }
-            });
-            
-            // Start loading the video immediately
-            video.load();
-            
-            // Force play as soon as possible
-            video.play().catch(function(e) {
-              console.log('Auto-play prevented:', e);
-              // Still try to play after user interaction
-              document.addEventListener('click', function() {
-                video.play().catch(function() {});
-              }, {once: true});
-            });
-          });
+      // Check if React loads within 5 seconds, otherwise redirect to static page
+      setTimeout(function() {
+        if (!window.React && !document.querySelector('#root').children.length) {
+          console.log('React failed to load. Redirecting to static landing page...');
+          window.location.href = '/static-landing.html';
         }
-        
-        // Execute immediately
-        optimizeVideos();
-        
-        // Also try again after a very short delay to ensure the DOM is fully loaded
-        setTimeout(optimizeVideos, 100);
-        
-        // Fix FAQ questions disappearing when clicked
-        function fixFAQQuestions() {
-          const faqQuestions = document.querySelectorAll('.faq-question');
-          
-          faqQuestions.forEach(question => {
-            // Make sure we don't double-attach event listeners
-            if (!question.dataset.fixedListener) {
-              // Use a new event handler to prevent default behavior and maintain visibility
-              question.dataset.fixedListener = true;
-              
-              // Clone the button to remove all event listeners
-              const newQuestion = question.cloneNode(true);
-              question.parentNode.replaceChild(newQuestion, question);
-              
-              // Add our custom event listener
-              newQuestion.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Get the answer element (next sibling to the question button)
-                const answer = this.nextElementSibling;
-                
-                // Toggle active class on the question
-                this.classList.toggle('active');
-                
-                // Toggle active class on the answer
-                if (answer && answer.classList.contains('faq-answer')) {
-                  answer.classList.toggle('active');
-                }
-                
-                // Toggle the arrow icon
-                const icon = this.querySelector('.icon');
-                if (icon) {
-                  icon.textContent = this.classList.contains('active') ? '↑' : '↓';
-                }
-              });
-            }
-          });
-        }
-        
-        // Run after DOM is loaded and also after a delay
-        setTimeout(fixFAQQuestions, 1000);
-        
-        // Also run when user scrolls near the FAQ section
-        document.addEventListener('scroll', function() {
-          const faqSection = document.getElementById('faq');
-          if (faqSection) {
-            const rect = faqSection.getBoundingClientRect();
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
-              fixFAQQuestions();
-            }
-          }
-        });
-      });
+      }, 5000);
     </script>
   </body>
 </html>

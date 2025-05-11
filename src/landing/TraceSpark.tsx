@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './TraceSpark.css';
 import './testimonials.css';
 import './header.css';
@@ -12,6 +13,9 @@ import './pricing-section.css';
 import './mobile-optimized.css';
 
 const TraceMate: React.FC = () => {
+  // Get auth state from context
+  const { isLoggedIn } = useAuth();
+  
   // State management
   const [typedText, setTypedText] = useState('');
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -87,6 +91,8 @@ const TraceMate: React.FC = () => {
     
     return () => clearTimeout(timer);
   }, []);
+  
+  // Login status is now managed by AuthContext
   
   // Auto-flip cards effect
   useEffect(() => {
@@ -263,10 +269,10 @@ const TraceMate: React.FC = () => {
             </ul>
           </nav>
           
-          {/* Sign In button for all views */}
-          <a href="/app" className="signin-button">
-            Sign In
-          </a>
+          {/* Only show Sign In button when not logged in */}
+          {!isLoggedIn && (
+            <a href="/login" className="signin-button">Sign In</a>
+          )}
         </div>
       </header>
       {/* Hero Section */}
@@ -442,8 +448,9 @@ const TraceMate: React.FC = () => {
                   
                   <div className="plan-features">
                     <ul>
-                      <li><span className="feature-icon">✓</span> 5 Traces/Month</li>
-                      <li><span className="feature-icon">✓</span> 5-Min Limit</li>
+                      <li><span className="feature-icon">✓</span> 5 Sessions/Day</li>
+                      <li><span className="feature-icon">✓</span> 1-Min Time Limit</li>
+                      <li><span className="feature-icon">✓</span> Basic Features</li>
                     </ul>
                   </div>
                   
@@ -487,9 +494,9 @@ const TraceMate: React.FC = () => {
                     <h3 className="plan-name">Lifetime</h3>
                     <div className="plan-price">
                       <div className="price-wrapper">
-                        <span className="original-price">$55</span>
+                        <span className="original-price">$45</span>
                         <span className="currency">$</span>
-                        <span className="amount">25</span>
+                        <span className="amount">7.5</span>
                         <span className="period">one-time</span>
                       </div>
                     </div>
