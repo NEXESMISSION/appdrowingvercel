@@ -54,8 +54,14 @@ const useCamera = (initialDeviceId?: string) => {
 
       setError(null); // Clear any previous errors
 
-      // Start camera with deviceId
+      // Create a timeout to detect if camera initialization is taking too long
+      const timeoutPromise = new Promise<MediaStream | null>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Camera initialization timed out. Trying alternative approach...'));
+        }, 5000); // 5 second timeout
+      });
 
+      // Start camera with deviceId
       const constraints: MediaStreamConstraints = {
         video: deviceId
           ? { deviceId: { exact: deviceId } }
@@ -67,8 +73,16 @@ const useCamera = (initialDeviceId?: string) => {
         audio: false
       };
 
-      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      // Camera stream obtained successfully
+      // Try to get the camera stream with a timeout
+      const mediaStream = await Promise.race([
+        navigator.mediaDevices.getUserMedia(constraints),
+        timeoutPromise
+      ]);
+
+      // If we reach here, we have a valid mediaStream
+      if (!mediaStream) {
+        throw new Error('Failed to initialize camera stream');
+      }
 
       // Check if we have video tracks
       if (mediaStream.getVideoTracks().length === 0) {
@@ -77,8 +91,9 @@ const useCamera = (initialDeviceId?: string) => {
 
       // Log video track info
       const videoTrack = mediaStream.getVideoTracks()[0];
-      // Video track enabled
+      console.log('Camera initialized successfully with track:', videoTrack.label);
 
+      // Set the stream in state and ref
       setStream(mediaStream);
       streamRef.current = mediaStream;
       setError(null);
@@ -91,10 +106,27 @@ const useCamera = (initialDeviceId?: string) => {
 
       return mediaStream;
     } catch (err: any) {
-      setPermissionGranted(false);
-      setError(`Failed to access camera: ${err.message || 'Unknown error'}`);
-      // Handle error accessing camera silently
-      return null;
+      console.error('Camera initialization error:', err);
+      
+      // Try a fallback approach with simpler constraints
+      try {
+        console.log('Trying fallback camera initialization...');
+        const fallbackStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
+        
+        setStream(fallbackStream);
+        streamRef.current = fallbackStream;
+        setError(null);
+        setPermissionGranted(true);
+        return fallbackStream;
+      } catch (fallbackErr) {
+        console.error('Fallback camera initialization also failed:', fallbackErr);
+        setPermissionGranted(false);
+        setError(`Failed to access camera: ${err.message || 'Unknown error'}`);
+        return null;
+      }
     }
   };
 
