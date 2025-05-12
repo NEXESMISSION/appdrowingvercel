@@ -389,6 +389,12 @@ body {
   pointer-events: auto; /* Allow interaction with the image */
   user-select: none; /* Prevent text selection */
   -webkit-user-drag: none; /* Prevent dragging on Safari */
+  image-rendering: -webkit-optimize-contrast; /* Improves sharpness in WebKit/Blink */
+  image-rendering: crisp-edges; /* CSS4 proposed */
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard) */
+  backface-visibility: hidden; /* Prevents blurring during transforms */
+  -webkit-backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased; /* Better text rendering */
 }
 
 .overlay-hint {
