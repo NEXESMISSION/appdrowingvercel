@@ -10,7 +10,7 @@
 }
 
 .payment-page {
-  background: #111827;
+  background-color: #2a3347;
   color: white;
   min-height: 100vh;
   padding: 2rem;
@@ -59,16 +59,20 @@
   font-size: 1rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 153, 0, 0.3);
   border-radius: 8px;
   transition: all 0.3s ease;
   margin: 0 auto 3rem auto;
   width: fit-content;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .bottom-back-link {
   margin-top: 2rem;
   margin-bottom: 3rem;
+  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 153, 0, 0.3);
 }
 
 .back-arrow {
@@ -85,8 +89,9 @@
 }
 
 .back-link:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #ff9900;
   transform: translateX(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -140,6 +145,7 @@
   color: transparent;
   margin-left: 0;
   font-family: 'Poppins', sans-serif;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* Header separator */
@@ -212,10 +218,10 @@
   background: linear-gradient(145deg, #2d3748, #1a202c);
   padding: 0.4rem 0.6rem;
   border-radius: 0.5rem;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(255, 95, 109, 0.2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(255, 153, 0, 0.2);
   min-width: 2.5rem;
   display: inline-block;
-  border: 1px solid rgba(255, 95, 109, 0.2);
+  border: 1px solid rgba(255, 153, 0, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -281,7 +287,7 @@
 }
 
 .flash-sale-badge {
-  background: linear-gradient(135deg, #4a9fff, #3a8fee);
+  background: linear-gradient(135deg, #ff9900, #ffcc80);
   color: white;
   font-size: 0.9rem;
   font-weight: 700;
@@ -289,7 +295,7 @@
   border-radius: 9999px;
   margin-bottom: 1.5rem;
   display: inline-block;
-  box-shadow: 0 4px 15px rgba(74, 159, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
   letter-spacing: 0.5px;
 }
 
@@ -344,33 +350,28 @@
 
 /* CTA Button */
 .cta-button {
-  margin: 0 auto 2.5rem auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #ff9900, #ff8800);
   color: white;
-  padding: 1rem 2.5rem;
-  border-radius: 0.75rem;
   border: none;
+  border-radius: 50px;
+  font-size: 1.125rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8px 15px rgba(255, 153, 0, 0.3);
   position: relative;
   overflow: hidden;
   z-index: 1;
   animation: fadeInUp 0.8s ease-out 0.4s;
   animation-fill-mode: backwards;
-  width: fit-content;
 }
 
 .cta-button:hover {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  box-shadow: 0 15px 25px rgba(37, 99, 235, 0.6), 0 10px 10px rgba(37, 99, 235, 0.4);
+  background: linear-gradient(135deg, #ff8800, #ff7700);
   transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(255, 153, 0, 0.6), 0 10px 10px rgba(255, 153, 0, 0.4);
 }
 
 .cta-button:active {
@@ -454,17 +455,23 @@
 }
 
 .payment-option-icon-container {
-  background-color: rgba(255, 255, 255, 0.9);
-  width: 50px;
-  height: 50px;
+  width: 3rem;
+  height: 3rem;
+  background-color: #1e293b;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  padding: 0.4rem;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  transition: all 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Special styling for Wise logo container */
+.payment-option-icon-container.wise {
+  background-color: #3a4255;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .payment-option-icon {
@@ -518,7 +525,7 @@
 
 .contact-link {
   color: white;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #ff9900, #ff8800);
   text-decoration: none;
   cursor: pointer;
   padding: 0.25rem 0.75rem;
@@ -531,7 +538,7 @@
 }
 
 .contact-link:hover {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #ff8800, #ff7700);
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
@@ -608,6 +615,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .modal-close-button {
@@ -668,7 +676,7 @@
 }
 
 .contact-option.cta-button {
-  background: linear-gradient(135deg, #ff5f6d, #ff9966);
+  background: linear-gradient(135deg, #ff9900, #ff8800);
   color: white;
   padding: 0.85rem 2rem;
   border-radius: 50px;
@@ -679,7 +687,7 @@
   font-size: 1rem;
   text-align: center;
   display: inline-block;
-  box-shadow: 0 8px 15px rgba(255, 95, 109, 0.3);
+  box-shadow: 0 8px 15px rgba(255, 153, 0, 0.3);
   position: relative;
   overflow: hidden;
   z-index: 1;

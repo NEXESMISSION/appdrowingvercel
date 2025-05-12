@@ -28,6 +28,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .login-container {
@@ -44,14 +45,14 @@
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  border-left: 4px solid #4a9fff;
+  border-left: 4px solid #ff9900;
 }
 
 .new-user-info h2 {
   font-size: 1.3rem;
   margin-top: 0;
   margin-bottom: 0.75rem;
-  color: #4a9fff;
+  color: #ff9900;
 }
 
 .new-user-info p {
@@ -61,15 +62,20 @@
 }
 
 .payment-link {
-  color: #4a9fff;
+  color: #ff9900;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  background-color: rgba(255, 153, 0, 0.1);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 .payment-link:hover {
-  color: #3a8fee;
-  text-decoration: underline;
+  color: #ffffff;
+  background-color: #ff9900;
+  text-decoration: none;
 }
 
 .login-container h1 {
@@ -80,15 +86,16 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .error-message {
-  background-color: rgba(255, 87, 87, 0.2);
-  border-left: 4px solid #ff5757;
+  background-color: rgba(255, 153, 0, 0.2);
+  border-left: 4px solid #ff9900;
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 1.5rem;
-  color: #ff9999;
+  color: #ffcc80;
 }
 
 .form-group {
@@ -120,19 +127,22 @@
 .login-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #4a9fff;
+  background-color: #ff9900;
   color: #ffffff;
   border: none;
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
   margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(255, 153, 0, 0.3);
 }
 
 .login-button:hover {
-  background-color: #3a8fee;
+  background-color: #ff8800;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 153, 0, 0.4);
 }
 
 .back-button-container {
@@ -143,17 +153,19 @@
   display: inline-block;
   padding: 0.75rem 2rem;
   background-color: transparent;
-  border: 1px solid #4a9fff;
-  color: #4a9fff;
+  border: 1px solid #ff9900;
+  color: #ff9900;
   text-decoration: none;
   border-radius: 6px;
   font-weight: 600;
-  transition: background-color 0.2s, color 0.2s;
+  transition: all 0.2s;
 }
 
 .back-button:hover {
-  background-color: #4a9fff;
+  background-color: #ff9900;
   color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 153, 0, 0.3);
 }
 
 /* Responsive styles */
